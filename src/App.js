@@ -5,38 +5,48 @@ function App() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const validatePassword = () => {
-    // Check if password is empty
-    if (!password.trim()) {
-      setError("Password field cannot be empty");
-      return false;
+  const validatePassword = (password) => {
+    if (password.length < 8) {
+      return "Password must be at least 8 characters long.";
     }
 
-    // Check for at least one special character
-    const specialCharPattern = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-    if (!specialCharPattern.test(password)) {
-      setError("Password must contain at least one special character");
-      return false;
+    if (!/[A-Z]/.test(password)) {
+      return "Password must contain at least one uppercase letter.";
     }
 
-    setError("");
-    return true;
+    if (!/[a-z]/.test(password)) {
+      return "Password must contain at least one lowercase letter.";
+    }
+
+    if (!/[0-9]/.test(password)) {
+      return "Password must contain at least one number.";
+    }
+
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return "Password must contain at least one special character.";
+    }
+
+    return "";
   };
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-    setError(""); // Clear error when user starts typing
+    const value = e.target.value;
+
+    setPassword(value);
+
+    const validationError = validatePassword(value);
+    setError(validationError);
   };
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
-      <header className="w-full max-w-xl rounded-2xl bg-slate-800 px-8 py-10 text-center text-white shadow-xl">
+      <div className="w-full max-w-md">
         <PasswordInput
           value={password}
           onChange={handlePasswordChange}
           error={error}
         />
-      </header>
+      </div>
     </div>
   );
 }
