@@ -9,7 +9,6 @@ function App() {
       <div className="hidden">
         <p>Welcome to Trade Assist! Powered by an Engineering team.</p>
       </div>
-
       <div className="w-72">
         <EmailInput
           label="Email Address"

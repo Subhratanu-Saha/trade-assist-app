@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 function EmailInput({ value, onChange, placeholder = "Enter your email", error, label, disabled = false }) {
   const [isValid, setIsValid] = useState(false);
   const handleChange = (e) => {
