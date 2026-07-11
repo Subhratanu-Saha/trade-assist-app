@@ -1,11 +1,14 @@
-import Button from "./components/Button";
+import './App.css';
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <div className="w-72">
-        <Button label="Login" />
-      </div>
+    <div className="App">
+      <header className="App-header">
+        <p>
+          Welcome to Trade Assist! Powered by an Engineering team.
+        </p>
+      </header>
     </div>
   );
 }
+
 export default App;
