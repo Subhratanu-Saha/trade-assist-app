@@ -1,31 +1,22 @@
 import React, { useState } from "react";
-function EmailInput({ value, onChange, placeholder = "Enter your email", error, label, disabled = false }) {
+
+function EmailInput({
+  value,
+  onChange,
+  placeholder = "Enter your email",
+  error,
+  label,
+  disabled = false,
+}) {
   const [isValid, setIsValid] = useState(false);
+
   const handleChange = (e) => {
     const value = e.target.value;
     onChange(e);
-    const emailParts = value.split("@");
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (emailParts.length === 2) {
-      const userId = emailParts[0];
-      const domainParts = emailParts[1].split(".");
-
-      if (domainParts.length === 2) {
-        const domain = domainParts[0];
-        const subDomain = domainParts[1];
-
-        if (
-          userId !== "" &&
-          domain !== "" &&
-          subDomain !== ""
-        ) {
-          setIsValid(true);
-        } else {
-          setIsValid(false);
-        }
-      } else {
-        setIsValid(false);
-      }
+    if (emailRegex.test(value)) {
+      setIsValid(true);
     } else {
       setIsValid(false);
     }
@@ -51,9 +42,10 @@ function EmailInput({ value, onChange, placeholder = "Enter your email", error, 
         }`}
       />
 
-      {error && <p className="text-red-600 mt-2">{error}</p>}  
+      {error && <p className="text-red-600 mt-2">{error}</p>}
+
       {value !== "" && (isValid ? <p className="text-green-600 mt-2">✔ Valid Email</p> : <p className="text-red-600 mt-2">Please write a proper email address.</p>)} 
-</div>
+    </div>
   );
 }
 
