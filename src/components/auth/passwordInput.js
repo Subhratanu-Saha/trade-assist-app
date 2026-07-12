@@ -47,7 +47,7 @@ const PasswordInput = ({
   return (
     <div className="w-80 mx-auto my-5">
       <label className="block mb-2 font-semibold text-black">Password</label>
-      <label className="block mb-2 font-semibold text-black">Password</label>
+      
       <div className="relative">
         <input
           id="password"
