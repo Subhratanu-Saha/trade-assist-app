@@ -3,13 +3,42 @@ import eyeOpen from "../../assets/eye open.png";
 import eyeClosed from "../../assets/eye closed.svg";
 
 const PasswordInput = ({
-  value,
-  onChange,
   placeholder = "Enter your password",
-  error,
   disabled = false,
 }) => {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const validatePassword = (value) => {
+    if (value.length < 8) {
+      return "Password must be at least 8 characters long.";
+    }
+
+    if (!/[A-Z]/.test(value)) {
+      return "Password must contain at least one uppercase letter.";
+    }
+
+    if (!/[a-z]/.test(value)) {
+      return "Password must contain at least one lowercase letter.";
+    }
+
+    if (!/[0-9]/.test(value)) {
+      return "Password must contain at least one number.";
+    }
+
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+      return "Password must contain at least one special character.";
+    }
+
+    return "";
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    setError(validatePassword(value));
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -18,13 +47,14 @@ const PasswordInput = ({
   return (
     <div className="w-80 mx-auto my-5">
       <label className="block mb-2 font-semibold text-black">Password</label>
+      <label className="block mb-2 font-semibold text-black">Password</label>
       <div className="relative">
         <input
           id="password"
           className="w-full px-3 py-2.5 pr-11 border border-gray-300 rounded-lg box-border bg-white text-gray-900 placeholder-gray-400"
           type={showPassword ? "text" : "password"}
-          value={value}
-          onChange={onChange}
+          value={password}
+          onChange={handlePasswordChange}
           placeholder={placeholder}
           disabled={disabled}
         />
