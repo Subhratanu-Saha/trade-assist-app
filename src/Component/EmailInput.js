@@ -35,7 +35,7 @@ function EmailInput({
         onChange={handleChange}
         placeholder={placeholder}
         disabled={disabled}
-        className={`w-full p-3 rounded-md border ${
+        className={`w-full p-3 rounded-md border bg-white text-black placeholder:text-gray-400 caret-black ${
           email === ""
             ? "border-gray-300"
             : isValid
@@ -52,3 +52,5 @@ function EmailInput({
     </div>
   );
 }
+
+export default EmailInput;
