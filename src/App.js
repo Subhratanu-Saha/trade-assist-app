@@ -1,13 +1,14 @@
-import PasswordInput from "./components/auth/passwordInput";
+import LoginForm from "./components/LoginForm";
 
 function App() {
   return (
-     <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
-      <header className="w-full max-w-xl rounded-2xl bg-slate-800 px-8 py-10 text-center text-white shadow-xl">
-        <p className="text-xl font-semibold">
-          Welcome to Trade Assist! Powered by an Engineering team.
-        </p>
-      </header>
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 flex items-center justify-center px-4 py-4">
+      <div className="w-full max-w-md mx-auto bg-slate-900 rounded-3xl shadow-2xl py-8 px-5">
+       <center> 
+        <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-5">Trade Assist Login</h1>
+       </center>
+        <LoginForm />
+      </div>
     </div>
   );
 }
