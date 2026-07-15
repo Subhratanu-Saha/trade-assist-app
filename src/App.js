@@ -2,17 +2,10 @@ import LoginForm from "./components/LoginForm";
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-5xl rounded-2xl bg-slate-800 px-8 py-10 text-white shadow-xl">
-        <div className="mb-8 text-center">
-          <p className="text-xl font-semibold">
-      
-          </p>
-        </div>
-
-        <div className="flex justify-center">
+      <div className="min-h-screen w-full bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 flex items-center justify-center px-4 py-4">
+        <div className="w-full max-w-md mx-auto bg-slate-900 rounded-3xl shadow-2xl py-8 px-5">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white text-center mb-5">Trade Assist Login</h1>
           <LoginForm />
-        </div>
       </div>
     </div>
   );
