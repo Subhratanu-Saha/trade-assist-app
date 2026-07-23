@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 function EmailInput({
   placeholder = "Enter your email",
   error,
@@ -52,3 +51,4 @@ function EmailInput({
     </div>
   );
 }
+export default EmailInput;
