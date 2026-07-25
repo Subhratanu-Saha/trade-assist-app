@@ -1,4 +1,4 @@
-import EmailInput from "../Component/EmailInput";
+import EmailInput from "./auth/EmailInput";
 import PasswordInput from "./auth/passwordInput";
 import Button from "./Button";
 function LoginForm() {
