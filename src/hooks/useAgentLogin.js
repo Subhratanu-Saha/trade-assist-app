@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { saveUserSession } from "../utils/sessionStorage";
 
 const useAgentLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -22,13 +23,19 @@ const useAgentLogin = () => {
       });
 
       const result = await response.json();
+      const isSuccessfulLogin = response.ok;
 
-      if (!response.ok) {
+      if (!isSuccessfulLogin) {
         throw new Error(result?.message || "Login failed.");
       }
 
-      setData(result);
-      return result;
+      const sessionPayload = saveUserSession({
+        email,
+        ...(result || {}),
+      });
+
+      setData(sessionPayload);
+      return sessionPayload;
     } catch (caughtError) {
       const message =
         caughtError?.message || "Something went wrong while logging in.";
