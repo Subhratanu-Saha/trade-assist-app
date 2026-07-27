@@ -5,6 +5,7 @@ import eyeClosed from "../../assets/eye closed.svg";
 const PasswordInput = ({
   placeholder = "Enter your password",
   disabled = false,
+  onPasswordChange,
 }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -36,7 +37,14 @@ const PasswordInput = ({
 
   const handlePasswordChange = (e) => {
     const value = e.target.value;
+
     setPassword(value);
+
+    // Send password to parent component
+    if (onPasswordChange) {
+      onPasswordChange(value);
+    }
+
     setError(validatePassword(value));
   };
 
@@ -46,17 +54,19 @@ const PasswordInput = ({
 
   return (
     <div className="w-80 mx-auto my-5">
-      <label className="block mb-2 font-semibold text-black">Password</label>
-      
+      <label className="block mb-2 font-semibold text-black">
+        Password
+      </label>
+
       <div className="relative">
         <input
           id="password"
-          className="w-full px-3 py-2.5 pr-11 border border-gray-300 rounded-lg box-border bg-white text-gray-900 placeholder-gray-400"
           type={showPassword ? "text" : "password"}
           value={password}
           onChange={handlePasswordChange}
           placeholder={placeholder}
           disabled={disabled}
+          className="w-full px-3 py-2.5 pr-11 border border-gray-300 rounded-lg box-border bg-white text-gray-900 placeholder-gray-400"
         />
 
         <button
@@ -73,11 +83,11 @@ const PasswordInput = ({
         </button>
       </div>
 
-     {error && (
-  <p className="text-red-500 text-sm mt-2">
-    {error}
-  </p>
-)}
+      {error && (
+        <p className="text-red-500 text-sm mt-2">
+          {error}
+        </p>
+      )}
     </div>
   );
 };
