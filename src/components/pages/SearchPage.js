@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import SearchBar from "../search/searchBar";
 import NewCustomerButton from "../search/NewCustomerButton";
-
-// Uncomment after Friend 2's PR is merged
-// import CustomerRecord from "../customer/CustomerRecord";
+import CustomerRecord from "../CustomerRecord";
 
 const SearchPage = () => {
   const [searchText, setSearchText] = useState("");
@@ -19,7 +17,7 @@ const SearchPage = () => {
     // TODO:
     // Integrate Customer Search API after backend is merged.
     //
-    // Expected Response
+    // Expected Responses:
     //
     // 200 -> Show CustomerRecord
     // 404 -> Show NewCustomerButton
@@ -29,7 +27,7 @@ const SearchPage = () => {
 
     console.log("Customer Search API will be integrated here.");
 
-    // Clear previous search result
+    // Clear previous result
     setCustomer(null);
     setResponseCode(null);
     setError("");
@@ -42,8 +40,11 @@ const SearchPage = () => {
       style={{ backgroundColor: "#F3E4C9" }}
     >
       <div
-        className="w-full max-w-2xl rounded-3xl shadow-2xl p-6 space-y-6"
-        style={{ backgroundColor: "#0A2947" }}
+        className="w-full max-w-2xl rounded-3xl shadow-2xl p-6 space-y-6 border"
+        style={{
+          backgroundColor: "#0A2947",
+          borderColor: "#8B5E3C",
+        }}
       >
         <SearchBar
           value={searchText}
@@ -65,13 +66,7 @@ const SearchPage = () => {
         {/* Customer Found */}
 
         {responseCode === 200 && customer && (
-          <>
-            {/*
-              Friend 2's Component
-
-              <CustomerRecord customer={customer} />
-            */}
-          </>
+          <CustomerRecord customer={customer} />
         )}
 
         {/* Customer Not Found */}
@@ -88,7 +83,7 @@ const SearchPage = () => {
             style={{
               backgroundColor: "#D3D4C0",
               border: "2px solid #8B5E3C",
-              color: "#8B0000",
+              color: "#0A2947",
             }}
           >
             {error}
