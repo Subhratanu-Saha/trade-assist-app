@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+
 function EmailInput({
   placeholder = "Enter your email",
   error,
   label = "Email Address",
   disabled = false,
+  onEmailChange,
 }) {
   const [email, setEmail] = useState("");
   const [isValid, setIsValid] = useState(false);
@@ -13,7 +15,13 @@ function EmailInput({
 
     setEmail(value);
 
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    // Send email to parent
+    if (onEmailChange) {
+      onEmailChange(value);
+    }
+
+    const emailRegex =
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (emailRegex.test(value)) {
       setIsValid(true);
@@ -47,8 +55,18 @@ function EmailInput({
         <p className="text-red-600 mt-2">{error}</p>
       )}
 
-      {email !== "" && (isValid ? ( <p className="text-green-600 mt-2">✔ Valid Email</p> ) : ( <p className="text-red-600 mt-2">Please write a proper email address. </p>))}
+      {email !== "" &&
+        (isValid ? (
+          <p className="text-green-600 mt-2">
+            ✔ Valid Email
+          </p>
+        ) : (
+          <p className="text-red-600 mt-2">
+            Please write a proper email address.
+          </p>
+        ))}
     </div>
   );
 }
+
 export default EmailInput;
