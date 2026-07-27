@@ -5,7 +5,11 @@ const NewCustomerButton = ({ onClick }) => {
     <button
       type="button"
       onClick={onClick}
-      className="w-full rounded-2xl bg-cyan-500 py-3 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:bg-cyan-600 hover:shadow-xl active:scale-95"
+      className="w-full rounded-2xl py-3 text-lg font-semibold shadow-lg transition-all duration-200 hover:scale-95 hover:shadow-xl active:scale-95"
+      style={{
+        backgroundColor: "#8B5E3C",
+        color: "#F3E4C9",
+      }}
     >
       + New Customer
     </button>
