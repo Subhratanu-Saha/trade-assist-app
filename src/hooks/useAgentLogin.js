@@ -5,12 +5,18 @@ const useAgentLogin = () => {
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
 
+  // Dynamic API Base URL
+  const API_BASE_URL =
+    window.location.hostname === "localhost"
+      ? "http://localhost:5000"
+      : "https://trade-assist-api.onrender.com";
+
   const login = async (email, password) => {
     setLoading(true);
     setError("");
 
     try {
-      const response = await fetch("/api/v1/auth", {
+      const response = await fetch(`${API_BASE_URL}/api/v1/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,6 +38,7 @@ const useAgentLogin = () => {
     } catch (caughtError) {
       const message =
         caughtError?.message || "Something went wrong while logging in.";
+
       setError(message);
       setData(null);
       return null;
