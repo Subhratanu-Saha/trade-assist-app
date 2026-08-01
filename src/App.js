@@ -1,8 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
-// import PrivateRoute from "./Search/PrivateRoute";
 import PrivateRoute from "./components/search/PrivateRoute";
-import SearchPage from "./components/search/SearchPage";
+import SearchPage from "./components/pages/SearchPage";
 
 
 function App() {
