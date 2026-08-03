@@ -29,13 +29,12 @@ const useAgentLogin = () => {
         throw new Error(result?.message || "Login failed.");
       }
 
-      const sessionPayload = saveUserSession({
+      saveUserSession({
         email,
-        ...(result || {}),
       });
 
-      setData(sessionPayload);
-      return sessionPayload;
+      setData(result);
+      return result;
     } catch (caughtError) {
       const message =
         caughtError?.message || "Something went wrong while logging in.";
