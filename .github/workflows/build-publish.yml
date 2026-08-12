@@ -20,14 +20,34 @@ jobs:
           node-version: 24
           cache: npm
 
+      - name: Prepare log directory
+        run: mkdir -p logs
+
+      - name: Log pipeline metadata
+        run: |
+          echo "Repository: $GITHUB_REPOSITORY" >> logs/pipeline.log
+          echo "Branch: $GITHUB_REF_NAME" >> logs/pipeline.log
+          echo "Commit: $GITHUB_SHA" >> logs/pipeline.log
+          echo "Node version: $(node -v)" >> logs/pipeline.log
+          echo "npm version: $(npm -v)" >> logs/pipeline.log
+          echo "Workflow: $GITHUB_WORKFLOW" >> logs/pipeline.log
+
       - name: Install dependencies
-        run: npm ci
+        run: npm ci 2>&1 | tee logs/install.log
 
       - name: App Build
-        run : npm run build
+        run: npm run build 2>&1 | tee logs/build.log
 
       - name: Deploy to render server
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_WEBHOOK_URL }}
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_WEBHOOK_URL }} 2>&1 | tee logs/deploy.log
+
+      - name: Upload pipeline logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-logs
+          path: logs
+          if-no-files-found: warn
 
       
 
