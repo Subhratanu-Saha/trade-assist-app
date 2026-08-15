@@ -3,12 +3,12 @@ import EmailInput from "./auth/EmailInput";
 import PasswordInput from "./auth/passwordInput";
 import Button from "./Button";
 import useAgentLogin from "../hooks/useAgentLogin";
-
+import { useAuth } from "../context/AuthContext";
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginSuccess, setLoginSuccess] = useState(false);
-
+  const { setEmail: setAuthEmail } = useAuth();
   const { login, loading, error } = useAgentLogin();
 
   const handleSubmit = async (e) => {
@@ -19,7 +19,7 @@ function LoginForm() {
     if (result) {
       console.log("Login Successful");
       console.log(result);
-
+      setAuthEmail(email);
       setLoginSuccess(true);
 
     }
