@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EmailInput from "./auth/EmailInput";
 import PasswordInput from "./auth/passwordInput";
 import Button from "./Button";
@@ -7,7 +8,7 @@ import useAgentLogin from "../hooks/useAgentLogin";
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginSuccess, setLoginSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const { login, loading, error } = useAgentLogin();
 
@@ -19,25 +20,9 @@ function LoginForm() {
     if (result) {
       console.log("Login Successful");
       console.log(result);
-
-      setLoginSuccess(true);
-
+      navigate("/search", { replace: true });
     }
   };
-
-  if (loginSuccess) {
-    return (
-      <div className="w-full max-w-sm rounded-3xl bg-white shadow-lg p-8 text-center">
-        <h2 className="text-2xl font-bold text-green-600">
-          Login Successful
-        </h2>
-
-        <p className="mt-3 text-gray-600">
-          Next component will be rendered here.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full max-w-sm rounded-3xl bg-slate-900 shadow-2xl py-8 px-4">
