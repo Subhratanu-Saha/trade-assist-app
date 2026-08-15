@@ -1,4 +1,9 @@
-import { saveUserSession } from "./sessionStorage";
+import {
+  saveUserSession,
+  getUserSession,
+  isUserAuthenticated,
+  clearUserSession,
+} from "./sessionStorage";
 
 describe("saveUserSession", () => {
   beforeEach(() => {
@@ -33,5 +38,20 @@ describe("saveUserSession", () => {
         loginTimeStamp: expect.any(String),
       })
     );
+  });
+
+  it("reads the saved session and reports the authenticated state", () => {
+    saveUserSession({ email: "agent@example.com" });
+
+    expect(getUserSession()).toEqual(
+      expect.objectContaining({
+        email: "agent@example.com",
+      })
+    );
+    expect(isUserAuthenticated()).toBe(true);
+
+    clearUserSession();
+    expect(getUserSession()).toBeNull();
+    expect(isUserAuthenticated()).toBe(false);
   });
 });
