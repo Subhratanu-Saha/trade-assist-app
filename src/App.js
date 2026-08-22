@@ -3,14 +3,23 @@ import LoginForm from "./components/LoginForm";
 import PrivateRoute from "./components/search/PrivateRoute";
 import SearchPage from "./components/pages/SearchPage";
 import { isUserAuthenticated } from "./utils/sessionStorage";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
-function App() {
+function AppRoutes() {
+  const { email, authLoading } = useAuth();
+
+  if (authLoading) {
+    return null;
+  }
+
+  const isAuthenticated = isUserAuthenticated(email);
+
   return (
     <Routes>
       <Route
         path="/"
         element={
-          isUserAuthenticated() ? (
+          isAuthenticated ? (
             <Navigate to="/search" replace />
           ) : (
             <div className="min-h-screen w-full bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 flex items-center justify-center px-4 py-4">
@@ -21,6 +30,7 @@ function App() {
           )
         }
       />
+
       <Route
         path="/search"
         element={
@@ -30,6 +40,14 @@ function App() {
         }
       />
     </Routes>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
   );
 }
 
