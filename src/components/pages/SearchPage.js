@@ -31,8 +31,52 @@ const SearchPage = () => {
     setCustomer(null);
     setResponseCode(null);
     setError("");
-    setLoading(false);
+    const email = searchText.trim();
+
+    // Validate email input
+    if (!email) {
+      setResponseCode(400);
+      setError("Email is required");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `https://trade-assist-api.onrender.com/api/v1/customers?email=${encodeURIComponent(email)}`
+      );
+
+      const data = await response.json();
+
+      console.log("Customer Search API response:", data);
+
+      setResponseCode(response.status);
+
+      // API request failed
+      if (!response.ok) {
+        setError(data.error || data.message || "Customer search failed");
+        return;
+      }
+
+      // Customer found
+      if (data.data && data.data.length > 0) {
+        setCustomer(data.data[0]);
+        return;
+      }
+
+      // Customer not found
+      setResponseCode(404);
+    } catch (err) {
+      console.error("Customer Search API error:", err);
+
+      setResponseCode(500);
+      setError("Unable to connect to Customer Search API");
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <div
