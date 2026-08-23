@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import SearchBar from "../search/searchBar";
 import NewCustomerButton from "../search/NewCustomerButton";
 import CustomerRecord from "../CustomerRecord";
+import useCustomerSearch from "../../hooks/useCustomerSearch";
+
 
 const SearchPage = () => {
   const [searchText, setSearchText] = useState("");
+   const { searchCustomer,loading, error, customer, responseCode, } = useCustomerSearch();
+
 
   // Backend Response States
-  const [customer, setCustomer] = useState(null);
-  const [responseCode, setResponseCode] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
+ 
   const handleSearch = async () => {
     // =====================================================
     // TODO:
@@ -25,56 +25,17 @@ const SearchPage = () => {
     // 500 -> Show Error
     // =====================================================
 
-    console.log("Customer Search API will be integrated here.");
-
-    // Clear previous result
-    setCustomer(null);
-    setResponseCode(null);
-    setError("");
+   
     const email = searchText.trim();
 
     // Validate email input
     if (!email) {
-      setResponseCode(400);
-      setError("Email is required");
-      return;
+        return;
     }
 
-    setLoading(true);
+   
 
-    try {
-      const response = await fetch(
-        `https://trade-assist-api.onrender.com/api/v1/customers?email=${encodeURIComponent(email)}`
-      );
-
-      const data = await response.json();
-
-      console.log("Customer Search API response:", data);
-
-      setResponseCode(response.status);
-
-      // API request failed
-      if (!response.ok) {
-        setError(data.error || data.message || "Customer search failed");
-        return;
-      }
-
-      // Customer found
-      if (data.data && data.data.length > 0) {
-        setCustomer(data.data[0]);
-        return;
-      }
-
-      // Customer not found
-      setResponseCode(404);
-    } catch (err) {
-      console.error("Customer Search API error:", err);
-
-      setResponseCode(500);
-      setError("Unable to connect to Customer Search API");
-    } finally {
-      setLoading(false);
-    }
+    await searchCustomer(email);
   };
 
 
