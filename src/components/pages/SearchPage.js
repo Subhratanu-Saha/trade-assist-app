@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import SearchBar from "../search/searchBar";
 import NewCustomerButton from "../search/NewCustomerButton";
 import CustomerRecord from "../CustomerRecord";
+import useCustomerSearch from "../../hooks/useCustomerSearch";
+
 
 const SearchPage = () => {
   const [searchText, setSearchText] = useState("");
+   const { searchCustomer,loading, error, customer, responseCode, } = useCustomerSearch();
+
 
   // Backend Response States
-  const [customer, setCustomer] = useState(null);
-  const [responseCode, setResponseCode] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
+ 
   const handleSearch = async () => {
     // =====================================================
     // TODO:
@@ -25,14 +25,19 @@ const SearchPage = () => {
     // 500 -> Show Error
     // =====================================================
 
-    console.log("Customer Search API will be integrated here.");
+   
+    const email = searchText.trim();
 
-    // Clear previous result
-    setCustomer(null);
-    setResponseCode(null);
-    setError("");
-    setLoading(false);
+    // Validate email input
+    if (!email) {
+        return;
+    }
+
+   
+
+    await searchCustomer(email);
   };
+
 
   return (
     <div

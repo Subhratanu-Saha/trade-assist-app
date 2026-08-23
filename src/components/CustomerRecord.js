@@ -12,7 +12,7 @@ const CustomerRecord = ({ customer }) => {
   const details = [
     {
       label: "Phone Number",
-      value: customer.phone,
+      value: customer.contactnum,
       icon: (
         <svg
           className="h-5 w-5"
@@ -29,7 +29,7 @@ const CustomerRecord = ({ customer }) => {
     },
     {
       label: "Email Address",
-      value: customer.email,
+      value: customer.emailaddr,
       icon: (
         <svg
           className="h-5 w-5"
