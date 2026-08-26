@@ -63,13 +63,15 @@ export const isUserAuthenticated = (loggedInEmail) => {
   }
 
   // 3. Required values must exist
-  if (!loggedInEmail || !session.email || !session.loginTimeStamp) {
+  if (!session.email || !session.loginTimeStamp) {
     return false;
   }
 
+  const emailToValidate = loggedInEmail || session.email;
+
   // 4. Logged-in email must match session-storage email
   const isEmailMatched =
-    loggedInEmail.toLowerCase() === session.email.toLowerCase();
+    emailToValidate.toLowerCase() === session.email.toLowerCase();
 
   if (!isEmailMatched) {
     return false;

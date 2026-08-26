@@ -1,5 +1,6 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
+  
 const CustomerRecord = ({ customer }) => {
   if (!customer) {
     return (
@@ -8,6 +9,11 @@ const CustomerRecord = ({ customer }) => {
       </div>
     );
   }
+
+  const customerPath = `/customer/${encodeURIComponent(customer.customerid)}`;
+  const rememberCustomer = () => {
+    window.sessionStorage.setItem("selectedCustomer", JSON.stringify(customer));
+  };
 
   const details = [
     {
@@ -50,7 +56,12 @@ const CustomerRecord = ({ customer }) => {
   ];
 
   return (
-    <section className="w-full max-w-xl overflow-hidden rounded-3xl border border-[#D3D4C0] bg-[#0A2947] shadow-2xl">
+    <Link
+      to={customerPath}
+      state={{ customer }}
+      onClick={rememberCustomer}
+      className="block w-full max-w-xl overflow-hidden rounded-3xl border border-[#D3D4C0] bg-[#0A2947] shadow-2xl transition-transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#F3E4C9]"
+    >
       <div className="h-2 w-full bg-gradient-to-r from-[#8B5E3C] via-[#D3D4C0] to-[#F3E4C9]" />
 
       <div className="p-5">
@@ -58,8 +69,8 @@ const CustomerRecord = ({ customer }) => {
           Customer Record
         </p>
 
-        <h2 className="mt-2 text-3xl font-bold text-[#F3E4C9]">
-          {customer.name || "Unnamed Customer"}
+        <h2 className="mt-2 text-3xl font-bold text-[#F3E4C9] underline">
+          {customer.name || "Unnamed Customer"} 
         </h2>
 
         <div className="mt-6 space-y-4">
@@ -85,7 +96,7 @@ const CustomerRecord = ({ customer }) => {
           ))}
         </div>
       </div>
-    </section>
+    </Link>
   );
 };
 

@@ -6,6 +6,9 @@ import {
 } from "./sessionStorage";
 
 describe("saveUserSession", () => {
+  const sessionStorageKey =
+    process.env.REACT_APP_SESSION_STORAGE_KEY || "userSession";
+
   beforeEach(() => {
     sessionStorage.clear();
   });
@@ -22,7 +25,9 @@ describe("saveUserSession", () => {
       })
     );
 
-    expect(JSON.parse(sessionStorage.getItem("userSession"))).toEqual(savedSession);
+    expect(JSON.parse(sessionStorage.getItem(sessionStorageKey))).toEqual(
+      savedSession
+    );
   });
 
   it("preserves additional session fields without changing the overall structure", () => {

@@ -4,6 +4,7 @@ import PrivateRoute from "./components/search/PrivateRoute";
 import SearchPage from "./components/pages/SearchPage";
 import { isUserAuthenticated } from "./utils/sessionStorage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import CustomerDetailsPage from "./components/pages/CustomerDetailsPage";
 
 function AppRoutes() {
   const { email, authLoading } = useAuth();
@@ -39,7 +40,16 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/customer/:customerId"
+        element={
+          <PrivateRoute>
+            <CustomerDetailsPage />
+          </PrivateRoute>
+        }
+      />
     </Routes>
+    
   );
 }
 
