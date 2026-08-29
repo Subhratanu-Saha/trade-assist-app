@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import PrivateRoute from "./components/search/PrivateRoute";
 import SearchPage from "./components/pages/SearchPage";
-import CustomerDetailsPage from "./components/pages/CustomerDetailsPage";
 import { isUserAuthenticated } from "./utils/sessionStorage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { CustomerProvider } from "./context/CustomerContext";
@@ -42,14 +41,14 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
-      <Route
+      {/* { <Route
         path="/customer"
         element={
           <PrivateRoute>
             <CustomerDetailsPage />
           </PrivateRoute>
         }
-      />
+      /> } */}
     </Routes>
   );
 }
