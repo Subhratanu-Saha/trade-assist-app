@@ -8,12 +8,6 @@ export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    const session = getUserSession();
-
-    if (session?.email) {
-      setEmail(session.email);
-    }
-
     setAuthLoading(false);
   }, []);
 

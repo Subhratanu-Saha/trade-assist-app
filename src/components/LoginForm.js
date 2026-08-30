@@ -21,6 +21,7 @@ function LoginForm() {
       console.log("Login Successful");
       console.log(result);
       setAuthenticatedEmail(email);
+      setEmail(true);
       navigate("/search", { replace: true });
     }
   };
