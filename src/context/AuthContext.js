@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { getUserSession } from "../utils/sessionStorage";
 
 const AuthContext = createContext(null);
 
@@ -8,11 +7,30 @@ export const AuthProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
+    const authenticatedEmail = localStorage.getItem(
+      "authenticatedUserEmail"
+    );
+
+    if (authenticatedEmail) {
+      setEmail(authenticatedEmail);
+    }
+
     setAuthLoading(false);
   }, []);
 
+  const setAuthenticatedEmail = (userEmail) => {
+    setEmail(userEmail);
+    localStorage.setItem("authenticatedUserEmail", userEmail);
+  };
+
   return (
-    <AuthContext.Provider value={{ email, setEmail, authLoading }}>
+    <AuthContext.Provider
+      value={{
+        email,
+        setAuthenticatedEmail,
+        authLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

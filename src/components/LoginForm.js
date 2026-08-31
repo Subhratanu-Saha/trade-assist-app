@@ -9,7 +9,7 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setEmail: setAuthenticatedEmail } = useAuth();
+  const { setAuthenticatedEmail } = useAuth();
   const { login, loading, error } = useAgentLogin();
 
   const handleSubmit = async (e) => {
@@ -21,7 +21,6 @@ function LoginForm() {
       console.log("Login Successful");
       console.log(result);
       setAuthenticatedEmail(email);
-      setEmail(true);
       navigate("/search", { replace: true });
     }
   };
