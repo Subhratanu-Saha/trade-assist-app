@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchBar from "../search/searchBar";
 import NewCustomerButton from "../search/NewCustomerButton";
 import CustomerRecord from "../CustomerRecord";
