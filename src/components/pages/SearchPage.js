@@ -3,15 +3,22 @@ import SearchBar from "../search/searchBar";
 import NewCustomerButton from "../search/NewCustomerButton";
 import CustomerRecord from "../CustomerRecord";
 import useCustomerSearch from "../../hooks/useCustomerSearch";
+import { useCustomer } from "../../context/CustomerContext";
 
 
 const SearchPage = () => {
   const [searchText, setSearchText] = useState("");
-   const { searchCustomer,loading, error, customer, responseCode, } = useCustomerSearch();
+  const { searchCustomer, loading, error, customer, responseCode, } = useCustomerSearch();
 
+  const { selectCustomer } = useCustomer();
 
+  useEffect(() => {
+    if (responseCode === 200 && customer) {
+      selectCustomer(customer);
+    }
+  }, [responseCode, customer, selectCustomer]);
   // Backend Response States
- 
+
   const handleSearch = async () => {
     // =====================================================
     // TODO:
@@ -25,15 +32,15 @@ const SearchPage = () => {
     // 500 -> Show Error
     // =====================================================
 
-   
+
     const email = searchText.trim();
 
     // Validate email input
     if (!email) {
-        return;
+      return;
     }
 
-   
+
 
     await searchCustomer(email);
   };
