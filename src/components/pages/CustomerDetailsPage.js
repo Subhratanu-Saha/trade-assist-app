@@ -106,8 +106,10 @@ const CustomerDetailsPage = ({ customer: customerProp }) => {
       aria-label="Customer details"
       className="flex min-h-screen w-full items-center justify-center bg-[#f3e4c9] px-4 py-6"
     >
-      <div className="mx-auto flex w-full max-w-xl flex-col gap-2">
-        <CustomerRecord customer={customer} />
+      <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-2">
+        <div className="w-full max-w-xl">
+          <CustomerRecord customer={customer} />
+        </div>
 
         <div className="w-full overflow-hidden rounded-[1.25rem] border-2 border-[#d3d4c0] bg-[#fffdf7] shadow-xl">
           <div className="px-5 pt-5 sm:px-7">

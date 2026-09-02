@@ -45,8 +45,7 @@ function AppRoutes() {
         path="/customer"
         element={
           <PrivateRoute>
-            {/* <CustomerDetailsPage /> */}
-            <h1>replace with customer details page</h1>
+            <CustomerDetailsPage />
           </PrivateRoute>
         }
       />
