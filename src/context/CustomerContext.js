@@ -1,17 +1,17 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 const CustomerContext = createContext(null);
 
 export const CustomerProvider = ({ children }) => {
     const [customer, setCustomer] = useState(null);
 
-    const selectCustomer = (customerData) => {
+    const selectCustomer = useCallback((customerData) => {
         setCustomer(customerData);
-    };
+    }, []);
 
-    const clearCustomer = () => {
+    const clearCustomer = useCallback(() => {
         setCustomer(null);
-    };
+    }, []);
 
     return (
         <CustomerContext.Provider

@@ -41,14 +41,15 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
-      {/* { <Route
+      <Route
         path="/customer"
         element={
           <PrivateRoute>
-            <CustomerDetailsPage />
+            {/* <CustomerDetailsPage /> */}
+            <h1>replace with customer details page</h1>
           </PrivateRoute>
         }
-      /> } */}
+      />
     </Routes>
   );
 }
