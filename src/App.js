@@ -4,6 +4,8 @@ import PrivateRoute from "./components/search/PrivateRoute";
 import SearchPage from "./components/pages/SearchPage";
 import { isUserAuthenticated } from "./utils/sessionStorage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { CustomerProvider } from "./context/CustomerContext";
+
 
 function AppRoutes() {
   const { email, authLoading } = useAuth();
@@ -39,6 +41,15 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/customer"
+        element={
+          <PrivateRoute>
+            {/* <CustomerDetailsPage /> */}
+            <h1>replace with customer details page</h1>
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 }
@@ -46,7 +57,9 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <AppRoutes />
+      <CustomerProvider>
+        <AppRoutes />
+      </CustomerProvider>
     </AuthProvider>
   );
 }
