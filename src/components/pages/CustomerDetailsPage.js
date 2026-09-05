@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import CustomerRecord from "../CustomerRecord";
+import { useCustomer } from "../../context/CustomerContext";
 
 const formatValue = (value) => {
   if (value === null || value === undefined || value === "") {
@@ -45,10 +46,9 @@ const EmptyDetails = ({ label }) => (
   </div>
 );
 
-const CustomerDetailsPage = ({ customer: customerProp }) => {
+const CustomerDetailsPage = () => {
   const [activeTab, setActiveTab] = useState("purchase");
-  const { state } = useLocation();
-  const customer = customerProp || state?.customer;
+  const { customer } = useCustomer();
 
   if (!customer) {
     return <Navigate to="/search" replace />;
