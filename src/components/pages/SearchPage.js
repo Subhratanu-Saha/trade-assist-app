@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import SearchBar from "../search/searchBar";
 import NewCustomerButton from "../search/NewCustomerButton";
 import CustomerRecord from "../CustomerRecord";
@@ -78,7 +79,14 @@ const SearchPage = () => {
         {/* Customer Found */}
 
         {responseCode === 200 && customer && (
-          <CustomerRecord customer={customer} />
+          <Link
+            to="/customer"
+            onClick={() => selectCustomer(customer)}
+            aria-label={`View details for ${customer.name || "customer"}`}
+            className="block rounded-3xl focus:outline-none focus:ring-2 focus:ring-[#F3E4C9]"
+          >
+            <CustomerRecord customer={customer} />
+          </Link>
         )}
 
         {/* Customer Not Found */}
