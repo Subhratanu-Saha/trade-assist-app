@@ -1,0 +1,150 @@
+import React, { useEffect, useState } from "react";
+
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://trade-assist-api.onrender.com";
+
+function Purchase({ customerId }) {
+  const [purchases, setPurchases] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let isCurrentRequest = true;
+
+    const fetchPurchases = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        if (!customerId) {
+          if (isCurrentRequest) {
+            setPurchases([]);
+            setError("Customer ID not found.");
+            setLoading(false);
+          }
+          return;
+        }
+
+        const response = await fetch(
+          `${API_BASE_URL}/api/v1/purchase?customerId=${encodeURIComponent(
+            customerId
+          )}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`Purchase API failed: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const purchaseData = Array.isArray(result?.data)
+          ? result.data
+          : Array.isArray(result)
+          ? result
+          : result?.data && typeof result.data === "object"
+          ? [result.data]
+          : [];
+
+        if (isCurrentRequest) {
+          setPurchases(purchaseData);
+        }
+      } catch (err) {
+        if (isCurrentRequest) {
+          setError("Unable to load purchase details.");
+        }
+      } finally {
+        if (isCurrentRequest) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchPurchases();
+
+    return () => {
+      isCurrentRequest = false;
+    };
+  }, [customerId]);
+
+  const columns = [
+    { key: "purchaseid", label: "Purchase ID", aliases: ["purchaseId"] },
+    { key: "productitem", label: "Product Item", aliases: ["productItem"] },
+    {
+      key: "transactionid",
+      label: "Transaction ID",
+      aliases: ["transactionId"],
+    },
+  ];
+
+  const getPurchaseValue = (purchase, column) => {
+    const value = [column.key, ...column.aliases]
+      .map((key) => purchase[key])
+      .find((value) => value !== undefined);
+
+    return value;
+  };
+
+  const formatValue = (value) => {
+    if (value === null || value === undefined || value === "") {
+      return "-";
+    }
+
+    return typeof value === "object" ? JSON.stringify(value) : String(value);
+  };
+
+  return (
+    <div className="w-full border border-[#D3D4C0] bg-white p-6">
+      <h2 className="mb-6 text-lg font-semibold text-[#0A2947]">
+        Purchase Details
+      </h2>
+
+      <div className="w-full overflow-x-auto border border-[#8B5E3C]">
+        {loading && (
+          <div className="py-6 text-center text-gray-500">
+            Loading purchase details...
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="py-6 text-center text-red-500">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && purchases.length === 0 && (
+          <div className="py-6 text-center text-gray-500">
+            No purchase details found.
+          </div>
+        )}
+
+        {!loading && !error && purchases.length > 0 && (
+          <table className="min-w-full divide-y divide-[#D3D4C0] text-left text-sm text-[#0A2947]">
+            <thead className="bg-[#f8f8f2] font-semibold">
+              <tr>
+                {columns.map((column) => (
+                  <th key={column.key} scope="col" className="whitespace-nowrap px-4 py-4">
+                    {column.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#D3D4C0]">
+              {purchases.map((purchase, index) => (
+                <tr key={purchase.purchaseid || purchase.purchaseId || index}>
+                  {columns.map((column) => (
+                    <td key={column.key} className="whitespace-nowrap px-4 py-4">
+                      {formatValue(getPurchaseValue(purchase, column))}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default Purchase;
