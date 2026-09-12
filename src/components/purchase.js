@@ -5,6 +5,37 @@ const API_BASE_URL =
     ? "http://localhost:5000"
     : "https://trade-assist-api.onrender.com";
 
+const purchaseRequests = new Map();
+
+const fetchPurchaseData = (customerId) => {
+  const existingRequest = purchaseRequests.get(customerId);
+
+  if (existingRequest) {
+    return existingRequest;
+  }
+
+  const request = fetch(
+    `${API_BASE_URL}/api/v1/purchase?customerId=${encodeURIComponent(
+      customerId
+    )}`
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Purchase API failed: ${response.status}`);
+      }
+
+      return response.json();
+    })
+    .finally(() => {
+      if (purchaseRequests.get(customerId) === request) {
+        purchaseRequests.delete(customerId);
+      }
+    });
+
+  purchaseRequests.set(customerId, request);
+  return request;
+};
+
 function Purchase({ customerId }) {
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,17 +58,7 @@ function Purchase({ customerId }) {
           return;
         }
 
-        const response = await fetch(
-          `${API_BASE_URL}/api/v1/purchase?customerId=${encodeURIComponent(
-            customerId
-          )}`
-        );
-
-        if (!response.ok) {
-          throw new Error(`Purchase API failed: ${response.status}`);
-        }
-
-        const result = await response.json();
+        const result = await fetchPurchaseData(customerId);
         const purchaseData = Array.isArray(result?.data)
           ? result.data
           : Array.isArray(result)
