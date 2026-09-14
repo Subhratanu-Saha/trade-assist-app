@@ -13,23 +13,23 @@ const PasswordInput = ({
 
   const validatePassword = (value) => {
     if (value.length < 8) {
-      return "At least 8 characters";
+      return "Password must be at least 8 characters long.";
     }
 
     if (!/[A-Z]/.test(value)) {
-      return "Needs an uppercase letter";
+      return "Password must contain an uppercase letter.";
     }
 
     if (!/[a-z]/.test(value)) {
-      return "Needs a lowercase letter";
+      return "Password must contain a lowercase letter.";
     }
 
     if (!/[0-9]/.test(value)) {
-      return "Needs a number";
+      return "Password must contain a number.";
     }
 
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      return "Needs a special character";
+      return "Password must contain a special character.";
     }
 
     return "";
