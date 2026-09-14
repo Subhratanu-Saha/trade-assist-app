@@ -17,19 +17,19 @@ const PasswordInput = ({
     }
 
     if (!/[A-Z]/.test(value)) {
-      return "Password must contain an uppercase letter.";
+      return "Password must contain at least one uppercase letter.";
     }
 
     if (!/[a-z]/.test(value)) {
-      return "Password must contain a lowercase letter.";
+      return "Password must contain at least one lowercase letter.";
     }
 
     if (!/[0-9]/.test(value)) {
-      return "Password must contain a number.";
+      return "Password must contain at least one number.";
     }
 
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      return "Password must contain a special character.";
+      return "Password must contain at least one special character.";
     }
 
     return "";
