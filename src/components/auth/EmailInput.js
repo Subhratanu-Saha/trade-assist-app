@@ -31,7 +31,7 @@ function EmailInput({
   };
 
   return (
-    <div className="w-96 mx-auto mt-10">
+    <div className="mx-auto">
       <label className="block mb-2 font-medium">
         {label}
       </label>
@@ -51,20 +51,22 @@ function EmailInput({
         }`}
       />
 
-      {error && (
-        <p className="text-red-600 mt-2">{error}</p>
-      )}
+      <div className="h-5">
+        {error && (
+          <p className="text-red-600 text-sm">{error}</p>
+        )}
 
-      {email !== "" &&
-        (isValid ? (
-          <p className="text-green-600 mt-2">
-            ✔ Valid Email
-          </p>
-        ) : (
-          <p className="text-red-600 mt-2">
-            Please write a proper email address.
-          </p>
-        ))}
+        {email !== "" &&
+          (isValid ? (
+            <p className="text-green-600 text-sm">
+              ✔ Valid Email
+            </p>
+          ) : (
+            <p className="text-red-600 text-sm">
+              Please write a proper email address.
+            </p>
+          ))}
+      </div>
     </div>
   );
 }

@@ -13,23 +13,23 @@ const PasswordInput = ({
 
   const validatePassword = (value) => {
     if (value.length < 8) {
-      return "Password must be at least 8 characters long.";
+      return "At least 8 characters";
     }
 
     if (!/[A-Z]/.test(value)) {
-      return "Password must contain at least one uppercase letter.";
+      return "Needs an uppercase letter";
     }
 
     if (!/[a-z]/.test(value)) {
-      return "Password must contain at least one lowercase letter.";
+      return "Needs a lowercase letter";
     }
 
     if (!/[0-9]/.test(value)) {
-      return "Password must contain at least one number.";
+      return "Needs a number";
     }
 
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      return "Password must contain at least one special character.";
+      return "Needs a special character";
     }
 
     return "";
@@ -53,7 +53,7 @@ const PasswordInput = ({
   };
 
   return (
-    <div className="w-80 mx-auto my-5">
+    <div className="mx-auto">
       <label className="block mb-2 font-semibold text-black">
         Password
       </label>
@@ -83,11 +83,13 @@ const PasswordInput = ({
         </button>
       </div>
 
-      {error && (
-        <p className="text-red-500 text-sm mt-2">
-          {error}
-        </p>
-      )}
+      <div className="h-5">
+        {error && (
+          <p className="text-red-500 text-sm leading-5">
+            {error}
+          </p>
+        )}
+      </div>
     </div>
   );
 };
