@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const useCustomerSearch = () => {
   const [customer, setCustomer] = useState(null);
   const [responseCode, setResponseCode] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const requestInProgress = useRef(false);
 
   // Use localhost backend during local development
   // and Render backend in deployed environment.
@@ -14,6 +15,11 @@ const useCustomerSearch = () => {
       : "https://trade-assist-api.onrender.com";
 
   const searchCustomer = async (email) => {
+    if (requestInProgress.current) {
+      return;
+    }
+
+    requestInProgress.current = true;
     setLoading(true);
     setError("");
     setCustomer(null);
@@ -52,6 +58,7 @@ const useCustomerSearch = () => {
       setResponseCode(500);
       setError("Unable to connect to Customer Search API.");
     } finally {
+      requestInProgress.current = false;
       setLoading(false);
     }
   };
