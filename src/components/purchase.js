@@ -5,6 +5,11 @@ const API_BASE_URL =
     ? "http://localhost:5000"
     : "https://trade-assist-api.onrender.com";
 
+const getLastFiveYears = () => {
+  const currentYear = new Date().getFullYear();
+  return Array.from({ length: 5 }, (_, i) => currentYear - i);
+};
+
 const purchaseRequests = new Map();
 
 const fetchPurchaseData = (customerId) => {
@@ -40,6 +45,9 @@ function Purchase({ customerId }) {
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+  const years = getLastFiveYears();
 
   useEffect(() => {
     let isCurrentRequest = true;
@@ -106,6 +114,16 @@ function Purchase({ customerId }) {
     return value;
   };
 
+  const getPurchaseYear = (purchase) => {
+    const rawDate =
+      purchase.purchasedt || purchase.purchaseDt || purchase.purchaseDate;
+
+    if (!rawDate) return null;
+
+    const parsedDate = new Date(rawDate);
+    return isNaN(parsedDate) ? null : parsedDate.getFullYear();
+  };
+
   const formatValue = (value) => {
     if (value === null || value === undefined || value === "") {
       return "-";
@@ -114,11 +132,29 @@ function Purchase({ customerId }) {
     return typeof value === "object" ? JSON.stringify(value) : String(value);
   };
 
+  const filteredPurchases = purchases.filter(
+    (purchase) => getPurchaseYear(purchase) === selectedYear
+  );
+
   return (
     <div className="w-full border border-[#D3D4C0] bg-white p-6">
-      <h2 className="mb-6 text-lg font-semibold text-[#0A2947]">
-        Purchase Details
-      </h2>
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-[#0A2947]">
+          Purchase Details
+        </h2>
+
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          className="border border-[#8B5E3C] bg-white px-3 py-1 text-sm text-[#0A2947]"
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="w-full overflow-x-auto border border-[#8B5E3C]">
         {loading && (
@@ -128,33 +164,38 @@ function Purchase({ customerId }) {
         )}
 
         {!loading && error && (
-          <div className="py-6 text-center text-red-500">
-            {error}
-          </div>
+          <div className="py-6 text-center text-red-500">{error}</div>
         )}
 
-        {!loading && !error && purchases.length === 0 && (
+        {!loading && !error && filteredPurchases.length === 0 && (
           <div className="py-6 text-center text-gray-500">
             No purchase details found.
           </div>
         )}
 
-        {!loading && !error && purchases.length > 0 && (
+        {!loading && !error && filteredPurchases.length > 0 && (
           <table className="min-w-full divide-y divide-[#D3D4C0] text-left text-sm text-[#0A2947]">
             <thead className="bg-[#f8f8f2] font-semibold">
               <tr>
                 {columns.map((column) => (
-                  <th key={column.key} scope="col" className="whitespace-nowrap px-4 py-4">
+                  <th
+                    key={column.key}
+                    scope="col"
+                    className="whitespace-nowrap px-4 py-4"
+                  >
                     {column.label}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-[#D3D4C0]">
-              {purchases.map((purchase, index) => (
+              {filteredPurchases.map((purchase, index) => (
                 <tr key={purchase.purchaseid || purchase.purchaseId || index}>
                   {columns.map((column) => (
-                    <td key={column.key} className="whitespace-nowrap px-4 py-4">
+                    <td
+                      key={column.key}
+                      className="whitespace-nowrap px-4 py-4"
+                    >
                       {formatValue(getPurchaseValue(purchase, column))}
                     </td>
                   ))}
