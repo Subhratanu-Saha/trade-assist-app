@@ -53,7 +53,7 @@ const PasswordInput = ({
   };
 
   return (
-    <div className="w-80 mx-auto my-5">
+    <div className="mx-auto">
       <label className="block mb-2 font-semibold text-black">
         Password
       </label>
@@ -83,11 +83,13 @@ const PasswordInput = ({
         </button>
       </div>
 
-      {error && (
-        <p className="text-red-500 text-sm mt-2">
-          {error}
-        </p>
-      )}
+      <div className="h-5">
+        {error && (
+          <p className="text-red-500 text-sm leading-5">
+            {error}
+          </p>
+        )}
+      </div>
     </div>
   );
 };

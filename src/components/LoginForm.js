@@ -5,9 +5,12 @@ import PasswordInput from "./auth/passwordInput";
 import Button from "./Button";
 import useAgentLogin from "../hooks/useAgentLogin";
 import { useAuth } from "../context/AuthContext";
+
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [validationError, setValidationError] = useState("");
+
   const navigate = useNavigate();
   const { setAuthenticatedEmail } = useAuth();
   const { login, loading, error } = useAgentLogin();
@@ -15,11 +18,19 @@ function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!email || !password) {
+      setValidationError("Please enter email ID and password first.");
+      return;
+    }
+
+    setValidationError("");
+
     const result = await login(email, password);
 
     if (result) {
       console.log("Login Successful");
       console.log(result);
+
       setAuthenticatedEmail(email);
       navigate("/search", { replace: true });
     }
@@ -35,11 +46,10 @@ function LoginForm() {
       `}</style>
 
       <div className="flex justify-center">
-        <div className="bg-white rounded-3xl shadow-lg w-full px-6 py-8">
-
+        <div className="bg-white rounded-3xl shadow-lg w-full px-8 py-8 min-h-96">
           <form
             onSubmit={handleSubmit}
-            className="space-y-5 mx-auto w-full login-form-inputs"
+            className="space-y-3 mx-auto w-full login-form-inputs"
           >
             <EmailInput
               onEmailChange={setEmail}
@@ -49,20 +59,21 @@ function LoginForm() {
               onPasswordChange={setPassword}
             />
 
-            {error && (
-              <p className="text-red-600 text-center text-sm">
-                Userid and password doesn't matched
+            <div style={{ marginTop: "25px" }}>
+              <Button
+                label={loading ? "Logging in..." : "Login"}
+                type="submit"
+                disabled={loading}
+              />
+            </div>
+
+            {(validationError || error) && (
+              <p className="text-red-600 text-center text-sm"
+              style={{ marginTop: "15px" }}>
+                {validationError || "Userid and password doesn't matched"}
               </p>
             )}
-
-            <Button
-              label={loading ? "Logging in..." : "Login"}
-              type="submit"
-              disabled={loading}
-            />
-
           </form>
-
         </div>
       </div>
     </div>
