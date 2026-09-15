@@ -169,7 +169,7 @@ function Purchase({ customerId }) {
 
         {!loading && !error && filteredPurchases.length === 0 && (
           <div className="py-6 text-center text-gray-500">
-            No purchase details found.
+           You don't have any purchase record created this year
           </div>
         )}
 
