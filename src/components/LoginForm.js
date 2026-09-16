@@ -19,7 +19,7 @@ function LoginForm() {
     e.preventDefault();
 
     if (!email || !password) {
-      setValidationError("Please enter email ID and password first.");
+      setValidationError("Please enter valid email ID and password");
       return;
     }
 
