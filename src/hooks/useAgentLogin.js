@@ -6,11 +6,7 @@ const useAgentLogin = () => {
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
 
-  // Dynamic API Base URL
-  const API_BASE_URL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:5000"
-      : "https://trade-assist-api.onrender.com";
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const login = async (email, password) => {
     setLoading(true);

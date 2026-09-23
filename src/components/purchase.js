@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API_BASE_URL =
-  window.location.hostname === "localhost"
-    ? "http://localhost:5000"
-    : "https://trade-assist-api.onrender.com";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const getLastFiveYears = () => {
   const currentYear = new Date().getFullYear();

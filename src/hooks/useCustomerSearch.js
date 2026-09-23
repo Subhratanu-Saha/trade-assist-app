@@ -7,12 +7,7 @@ const useCustomerSearch = () => {
   const [loading, setLoading] = useState(false);
   const requestInProgress = useRef(false);
 
-  // Use localhost backend during local development
-  // and Render backend in deployed environment.
-  const API_BASE_URL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:5000"
-      : "https://trade-assist-api.onrender.com";
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const searchCustomer = async (email) => {
     if (requestInProgress.current) {
