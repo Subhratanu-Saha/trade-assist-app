@@ -65,19 +65,24 @@ const CustomerDetailsPage = () => {
             )}
 
             {/* Case */}
+            {/* Case */}
             {activeTab === "case" && (
-              <div className="relative border border-dashed border-gray-300 p-6 pt-16 text-center">
-                <button
-                  type="button"
-                  className="absolute right-4 top-4 rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white"
-                >
-                  + New Case
-                </button>
-                <p className="text-sm text-gray-500">
-                  No case details available.
-                </p>
-              </div>
-              <Case customerId={customerId} />
+              <>
+                <div className="relative border border-dashed border-gray-300 p-6 pt-16 text-center">
+                  <button
+                    type="button"
+                    className="absolute right-4 top-4 rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white"
+                  >
+                    + New Case
+                  </button>
+            
+                  <p className="text-sm text-gray-500">
+                    No case details available.
+                  </p>
+                </div>
+            
+                <Case customerId={customerId} />
+              </>
             )}
 
             {/* Fund */}
