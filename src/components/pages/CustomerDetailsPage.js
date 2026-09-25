@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import CustomerRecord from "../CustomerRecord";
 import Purchase from "../purchase";
+import Case from "../case";
 import { useCustomer } from "../../context/CustomerContext";
 
 const CustomerDetailsPage = () => {
@@ -31,7 +32,6 @@ const CustomerDetailsPage = () => {
       className="flex min-h-screen w-full items-center justify-center bg-[#f3e4c9] px-4 py-6"
     >
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-2">
-
         {/* Customer Record */}
         <div className="w-full max-w-xl">
           <CustomerRecord customer={customer} />
@@ -39,7 +39,6 @@ const CustomerDetailsPage = () => {
 
         {/* Tabs + Details */}
         <div className="w-full max-w-xl">
-
           {/* Tabs */}
           <div className="flex w-full border-b border-gray-300">
             {tabs.map((tab) => (
@@ -60,7 +59,6 @@ const CustomerDetailsPage = () => {
 
           {/* Tab Content */}
           <div className="mt-4 w-full rounded-lg bg-white p-5 shadow-sm">
-
             {/* Purchase */}
             {activeTab === "purchase" && (
               <Purchase customerId={customerId} />
@@ -79,6 +77,7 @@ const CustomerDetailsPage = () => {
                   No case details available.
                 </p>
               </div>
+              <Case customerId={customerId} />
             )}
 
             {/* Fund */}
@@ -89,7 +88,6 @@ const CustomerDetailsPage = () => {
                 </p>
               </div>
             )}
-
           </div>
         </div>
       </div>
