@@ -65,7 +65,9 @@ const CustomerDetailsPage = () => {
             )}
 
             {/* Case */}
-            {activeTab === "case" && (
+            {/* Case */}
+          {activeTab === "case" && (
+            <>
               <div className="relative border border-dashed border-gray-300 p-6 pt-16 text-center">
                 <button
                   type="button"
@@ -73,12 +75,15 @@ const CustomerDetailsPage = () => {
                 >
                   + New Case
                 </button>
+          
                 <p className="text-sm text-gray-500">
                   No case details available.
                 </p>
               </div>
+          
               <Case customerId={customerId} />
-            )}
+            </>
+          )}
 
             {/* Fund */}
             {activeTab === "fund" && (
