@@ -11,30 +11,33 @@ const PasswordInput = ({
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const validatePassword = (value) => {
-    if (value.length < 8) {
-      return "Password must be at least 8 characters long.";
-    }
-
-    if (!/[A-Z]/.test(value)) {
-      return "Password must contain at least one uppercase letter.";
-    }
-
-    if (!/[a-z]/.test(value)) {
-      return "Password must contain at least one lowercase letter.";
-    }
-
-    if (!/[0-9]/.test(value)) {
-      return "Password must contain at least one number.";
-    }
-
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      return "Password must contain at least one special character.";
-    }
-
+ const validatePassword = (value) => {
+  if (value === "") {
     return "";
-  };
+  }
 
+  if (value.length < 8) {
+    return "Password must be at least 8 characters long.";
+  }
+
+  if (!/[A-Z]/.test(value)) {
+    return "Password must contain at least one uppercase letter.";
+  }
+
+  if (!/[a-z]/.test(value)) {
+    return "Password must contain at least one lowercase letter.";
+  }
+
+  if (!/[0-9]/.test(value)) {
+    return "Password must contain at least one number.";
+  }
+
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+    return "Password must contain at least one special character.";
+  }
+
+  return "";
+};
   const handlePasswordChange = (e) => {
     const value = e.target.value;
 
