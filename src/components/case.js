@@ -125,9 +125,17 @@ function Case({ customerId }) {
     <div className="w-full">
       {/* Open Cases */}
       <section>
-        <h2 className="mb-4 text-lg font-semibold text-[#0A2947]">
-          Open Cases
-        </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-[#0A2947]">
+            Open Cases
+          </h2>
+          <button
+            type="button"
+            className="rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white"
+          >
+            + New Case
+          </button>
+        </div>
 
         {openCases.length === 0 ? (
           <div className="mb-6 border border-dashed border-gray-300 p-5 text-center text-sm text-gray-500">
