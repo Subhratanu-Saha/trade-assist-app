@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import CustomerRecord from "../CustomerRecord";
 import Purchase from "../purchase";
+import Case from "../case";
 import { useCustomer } from "../../context/CustomerContext";
 
 const CustomerDetailsPage = () => {
@@ -31,7 +32,6 @@ const CustomerDetailsPage = () => {
       className="flex min-h-screen w-full items-center justify-center bg-[#f3e4c9] px-4 py-6"
     >
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-2">
-
         {/* Customer Record */}
         <div className="w-full max-w-xl">
           <CustomerRecord customer={customer} />
@@ -39,7 +39,6 @@ const CustomerDetailsPage = () => {
 
         {/* Tabs + Details */}
         <div className="w-full max-w-xl">
-
           {/* Tabs */}
           <div className="flex w-full border-b border-gray-300">
             {tabs.map((tab) => (
@@ -60,7 +59,6 @@ const CustomerDetailsPage = () => {
 
           {/* Tab Content */}
           <div className="mt-4 w-full rounded-lg bg-white p-5 shadow-sm">
-
             {/* Purchase */}
             {activeTab === "purchase" && (
               <Purchase customerId={customerId} />
@@ -68,11 +66,18 @@ const CustomerDetailsPage = () => {
 
             {/* Case */}
             {activeTab === "case" && (
-              <div className="border border-dashed border-gray-300 p-6 text-center">
+              <div className="relative border border-dashed border-gray-300 p-6 pt-16 text-center">
+                <button
+                  type="button"
+                  className="absolute right-4 top-4 rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white"
+                >
+                  + New Case
+                </button>
                 <p className="text-sm text-gray-500">
                   No case details available.
                 </p>
               </div>
+              <Case customerId={customerId} />
             )}
 
             {/* Fund */}
@@ -83,7 +88,6 @@ const CustomerDetailsPage = () => {
                 </p>
               </div>
             )}
-
           </div>
         </div>
       </div>
