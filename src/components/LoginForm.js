@@ -13,7 +13,7 @@ function LoginForm() {
 
   const navigate = useNavigate();
   const { setAuthenticatedEmail } = useAuth();
-  const { login, loading, error } = useAgentLogin();
+  const { login, loading, error, clearError } = useAgentLogin();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,11 +52,19 @@ function LoginForm() {
             className="space-y-3 mx-auto w-full login-form-inputs"
           >
             <EmailInput
-              onEmailChange={setEmail}
+              onEmailChange={(value) => {
+                setEmail(value);
+                setValidationError("");
+                clearError();
+              }}
             />
 
             <PasswordInput
-              onPasswordChange={setPassword}
+              onPasswordChange={(value) => {
+                setPassword(value);
+                setValidationError("");
+                clearError();
+              }}
             />
 
             <div style={{ marginTop: "25px" }}>
