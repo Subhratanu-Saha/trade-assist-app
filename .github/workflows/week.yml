@@ -1,0 +1,21 @@
+name: Weekly Version - Week
+on:
+  schedule:
+    # Runs every Monday at 00:00 UTC
+    - cron: "0 0 * * 1"
+
+jobs:
+  get-week:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get current week number
+        id: week
+        run: |
+          WEEK=$(date -u +%V)
+          echo "Current week number: $WEEK"
+          echo "week=$WEEK" >> "$GITHUB_OUTPUT"
+
+      - name: Display week number
+        run: |
+          echo "Week number is: ${{ steps.week.outputs.week }}"
