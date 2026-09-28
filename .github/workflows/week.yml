@@ -1,16 +1,13 @@
 name: Weekly Version - Week
-
 on:
   schedule:
     - cron: "0 0 * * 1"
   workflow_dispatch:
-
 jobs:
   get-week:
     runs-on: ubuntu-latest
     outputs:
       week: ${{ steps.week.outputs.week }}
-
     steps:
       - name: Get current week number
         id: week
