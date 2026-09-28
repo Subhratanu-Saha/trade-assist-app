@@ -8,8 +8,6 @@ on:
 jobs:
   get-week:
     runs-on: ubuntu-latest
-    outputs:
-      week: ${{ steps.week.outputs.week }}
 
     steps:
       - name: Get current week number
@@ -20,6 +18,5 @@ jobs:
           echo "week=$WEEK" >> "$GITHUB_OUTPUT"
 
       - name: Display week number
-       run: |
-         echo "Week number is: $
-  {{ steps.week.outputs.week }}"
+        run: |
+          echo "Week number is: ${{ steps.week.outputs.week }}"
