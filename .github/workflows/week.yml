@@ -20,4 +20,6 @@ jobs:
           echo "week=$WEEK" >> "$GITHUB_OUTPUT"
 
       - name: Display week number
-        run: echo "Week number is: ${{ steps.week.outputs.week }}"
+       run: |
+         echo "Week number is: $
+  {{ steps.week.outputs.week }}"
