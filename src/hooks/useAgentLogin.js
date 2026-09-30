@@ -6,6 +6,10 @@ const useAgentLogin = () => {
   const [error, setError] = useState("");
   const [data, setData] = useState(null);
 
+  const clearError = () => {
+    setError("");
+  };
+
   // Dynamic API Base URL
   const API_BASE_URL =
     window.location.hostname === "localhost"
@@ -58,6 +62,7 @@ const useAgentLogin = () => {
     loading,
     error,
     data,
+    clearError,
   };
 };
 
