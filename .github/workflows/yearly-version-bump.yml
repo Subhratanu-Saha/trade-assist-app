@@ -3,7 +3,8 @@ name: Yearly Version Bump
 on:
   schedule:
     - cron: "0 0 1 1 *"
-  workflow_dispatch:   # temporary, for testing only. Remove in Step 6
+  push:
+    branches: [FEATURE/TA-0097-yearly-versioning]
 
 permissions:
   contents: write
@@ -11,6 +12,7 @@ permissions:
 jobs:
   bump-version:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -31,7 +33,7 @@ jobs:
         if: steps.ver.outputs.current != steps.ver.outputs.yy
         run: |
           npm version ${{ steps.ver.outputs.new }} --no-git-tag-version
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json package-lock.json
           git commit -m "chore: bump version to ${{ steps.ver.outputs.new }}"
