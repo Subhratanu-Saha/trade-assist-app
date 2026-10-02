@@ -3,8 +3,7 @@ name: Yearly Version Bump
 on:
   schedule:
     - cron: "0 0 1 1 *"
-  push:
-    branches: [FEATURE/TA-0097-yearly-versioning]
+ 
 
 permissions:
   contents: write
