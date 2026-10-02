@@ -11,11 +11,13 @@ jobs:
     steps:
       - name: Get current week number
         id: week
+        shell: bash
         run: |
-          WEEK=$(date -u +%V)
-          echo "Current week number: $WEEK"
-          echo "week=$WEEK" >> "$GITHUB_OUTPUT"
+          week="$(date -u +%V)"
+          printf 'week=%s\n' "$week" >> "$GITHUB_OUTPUT"
 
       - name: Display week number
+        env:
+          WEEK: ${{ steps.week.outputs.week }}
         run: |
-          echo "Week number is: ${{ steps.week.outputs.week }}"
+          printf 'Week number is: %s\n' "$WEEK"
