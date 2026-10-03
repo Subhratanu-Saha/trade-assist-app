@@ -1,6 +1,7 @@
 name: Weekly Version Bump
 
 on:
+  push:
   schedule:
     - cron: "0 0 * * 1"
 
@@ -12,29 +13,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 24
 
-      - name: Compute versions
+      - name: Compute weekly version
         id: ver
         run: |
           WEEK=$(date -u +%V)
-          CURRENT_MINOR=$(node -p "require('./package.json').version.split('.')[1]")
-          echo "week=$WEEK" >> $GITHUB_OUTPUT
-          echo "current=$CURRENT_MINOR" >> $GITHUB_OUTPUT
-          echo "new=0.${WEEK}.0" >> $GITHUB_OUTPUT
+          CURRENT_VERSION=$(npm pkg get version | tr -d '"')
+
+          echo "Current version: $CURRENT_VERSION"
+          echo "Current week: $WEEK"
+
+          echo "week=$WEEK" >> "$GITHUB_OUTPUT"
+          echo "current=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
+          echo "new=0.${WEEK}.0" >> "$GITHUB_OUTPUT"
 
       - name: Bump version
-        if: steps.ver.outputs.current != steps.ver.outputs.week
+        if: steps.ver.outputs.current != steps.ver.outputs.new
         run: |
           npm version ${{ steps.ver.outputs.new }} --no-git-tag-version
+
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add package.json package-lock.json
           git commit -m "chore: bump version to ${{ steps.ver.outputs.new }}"
-          git tag "v${{ steps.ver.outputs.new }}"
-          git pull --rebase origin ${{ github.ref_name }}
-          git push origin HEAD --tags
+          git push
