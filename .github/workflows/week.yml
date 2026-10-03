@@ -1,11 +1,14 @@
-name: Weekly Version Bump
+name: Weekly Version
+
 on:
   schedule:
-    - cron: "0 0 * * 1"
+    - cron: "0 0 * * 1"   # every Monday 00:00 UTC (scheduled only, no manual trigger)
+
 permissions:
   contents: write
+
 jobs:
-  bump-version:
+  weekly-version:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,25 +17,26 @@ jobs:
         with:
           node-version: 20
 
-      - name: Compute version
-        id: version
-        shell: bash
+      - name: Set week in version
+        id: bump
         run: |
-          week="$(date -u +%V)"
-          week_number="$((10#$week))"
-          current="$(node -p "require('./package.json').version")"
-          printf 'version=0.%s.0\n' "$week_number" >> "$GITHUB_OUTPUT"
-          printf 'current=%s\n' "$current" >> "$GITHUB_OUTPUT"
+          CURRENT=$(node -p "require('./package.json').version")   
+          WEEK=$((10#$(date +%V)))                                 
+          NEW=$(echo "$CURRENT" | awk -F. -v OFS=. -v w="$WEEK" '{ $2 = w; print }')
 
-      - name: Bump package version
-        if: steps.version.outputs.current != steps.version.outputs.version
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-        shell: bash
+          if [ "$NEW" = "$CURRENT" ]; then
+            echo "Version already up to date: $CURRENT"
+            exit 0
+          fi
+
+          npm version "$NEW" --no-git-tag-version                  
+          echo "new_version=$NEW" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push
+        if: steps.bump.outputs.new_version != ''
         run: |
-          npm version "$VERSION" --no-git-tag-version
-          git config user.name "github-actions[bot]"
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json package-lock.json
-          git commit -m "chore: bump version to $VERSION"
+          git commit -m "chore: weekly version ${{ steps.bump.outputs.new_version }}"
           git push
