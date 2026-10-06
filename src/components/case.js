@@ -1,21 +1,40 @@
 import React, { useEffect, useState } from "react";
+
 const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5000"
     : "https://trade-assist-api.onrender.com";
 
+// Stores only requests that are currently in progress.
+// This prevents duplicate API calls caused by React StrictMode.
+const caseRequestCache = new Map();
+
 const fetchCaseData = async (customerId) => {
-  const response = await fetch(
+  if (caseRequestCache.has(customerId)) {
+    return caseRequestCache.get(customerId);
+  }
+
+  const request = fetch(
     `${API_BASE_URL}/api/v1/cases/list?customerId=${encodeURIComponent(
       customerId
     )}`
-  );
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Case API failed: ${response.status}`);
+      }
 
-  if (!response.ok) {
-    throw new Error(`Case API failed: ${response.status}`);
-  }
+      return response.json();
+    })
+    .finally(() => {
+      // Remove the request after it finishes.
+      // This allows a future Case-tab opening to fetch fresh data.
+      caseRequestCache.delete(customerId);
+    });
 
-  return response.json();
+  caseRequestCache.set(customerId, request);
+
+  return request;
 };
 
 function Case({ customerId }) {
@@ -129,6 +148,7 @@ function Case({ customerId }) {
           <h2 className="text-lg font-semibold text-[#0A2947]">
             Open Cases
           </h2>
+
           <button
             type="button"
             className="rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white"
