@@ -50,6 +50,10 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="*"
+        element={<Navigate to={isAuthenticated ? "/search" : "/"} replace />}
+      />
     </Routes>
   );
 }
