@@ -1,34 +1,53 @@
-name: Build and Test
+name: Build and Publish
+
+run-name: Build and Test - ${{ github.ref_name }}
 
 on:
   push:
     branches:
       - main
-  
+
+permissions:
+  contents: write
 
 jobs:
   build:
+    if: "${{ github.event_name != 'push' || startsWith(github.event.head_commit.message, 'chore: increment patch version') == false }}"
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: '24'
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: App Build
-        run : npm run build
+      - name: Build
+        run: npm run build
 
-      - name: Deploy to render server
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_WEBHOOK_URL }}
+      - name: Deploy to Render server
+        run: curl --fail --show-error --silent --request POST "${{ secrets.RENDER_DEPLOY_WEBHOOK_URL }}"
 
-      
+      - name: Checkout main for version update
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: version-update
 
-      
+      - name: Increment patch version on main
+        working-directory: version-update
+        run: |
+          npm version patch --no-git-tag-version
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git commit -m "chore: increment patch version"
+          git push origin HEAD:main
