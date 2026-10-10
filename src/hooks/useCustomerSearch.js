@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 
+const completedSearches = new Map();
+
 const useCustomerSearch = () => {
   const [customer, setCustomer] = useState(null);
   const [responseCode, setResponseCode] = useState(null);
@@ -15,6 +17,16 @@ const useCustomerSearch = () => {
       : "https://trade-assist-api.onrender.com";
 
   const searchCustomer = async (email) => {
+    const cacheKey = email.trim();
+
+    if (completedSearches.has(cacheKey)) {
+      const cachedResult = completedSearches.get(cacheKey);
+      setCustomer(cachedResult.customer);
+      setResponseCode(cachedResult.responseCode);
+      setError("");
+      return;
+    }
+
     if (requestInProgress.current) {
       return;
     }
@@ -46,12 +58,21 @@ const useCustomerSearch = () => {
 
       // Customer found
       if (data?.data && data.data.length > 0) {
-        setCustomer(data.data[0]);
+        const foundCustomer = data.data[0];
+        setCustomer(foundCustomer);
+        completedSearches.set(cacheKey, {
+          customer: foundCustomer,
+          responseCode: response.status,
+        });
         return;
       }
 
       // API returned 200 with no customer
       setResponseCode(404);
+      completedSearches.set(cacheKey, {
+        customer: null,
+        responseCode: 404,
+      });
     } catch (err) {
       console.error("Customer Search API error:", err);
 
