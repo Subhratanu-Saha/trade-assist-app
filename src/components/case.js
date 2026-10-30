@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import logger from "../utils/logger";
 
 const API_BASE_URL =
   window.location.hostname === "localhost"
@@ -24,6 +25,7 @@ const fetchCaseData = async (customerId) => {
         throw new Error(`Case API failed: ${response.status}`);
       }
 
+      logger.info("Case list retrieved", response.status);
       return response.json();
     })
     .finally(() => {
@@ -77,6 +79,7 @@ function Case({ customerId }) {
           setClosedCases(closed);
         }
       } catch (err) {
+        logger.error("Case list retrieval failed");
         if (isCurrentRequest) {
           setError("Unable to load case details.");
         }

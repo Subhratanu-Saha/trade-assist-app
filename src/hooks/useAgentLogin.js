@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { saveUserSession } from "../utils/sessionStorage";
+import logger from "../utils/logger";
 
 const useAgentLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -21,6 +22,7 @@ const useAgentLogin = () => {
     setError("");
 
     try {
+      logger.info("Agent login request started");
       const response = await fetch(`${API_BASE_URL}/api/v1/auth`, {
         method: "POST",
         headers: {
@@ -39,6 +41,7 @@ const useAgentLogin = () => {
         throw new Error(result?.message || "Login failed.");
       }
 
+      logger.info("Agent login succeeded");
       saveUserSession({
         email,
       });
@@ -46,6 +49,7 @@ const useAgentLogin = () => {
       setData(result);
       return result;
     } catch (caughtError) {
+      logger.error("Agent login failed");
       const message =
         caughtError?.message || "Something went wrong while logging in.";
 

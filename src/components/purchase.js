@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import logger from "../utils/logger";
 
 const API_BASE_URL =
   window.location.hostname === "localhost"
@@ -29,6 +30,7 @@ const fetchPurchaseData = (customerId) => {
         throw new Error(`Purchase API failed: ${response.status}`);
       }
 
+      logger.info("Purchase data retrieved", response.status);
       return response.json();
     })
     .finally(() => {
@@ -79,6 +81,7 @@ function Purchase({ customerId }) {
           setPurchases(purchaseData);
         }
       } catch (err) {
+        logger.error("Purchase data retrieval failed");
         if (isCurrentRequest) {
           setError("Unable to load purchase details.");
         }
