@@ -48,10 +48,10 @@ describe("saveUserSession", () => {
         email: "agent@example.com",
       })
     );
-    expect(isUserAuthenticated()).toBe(true);
+    expect(isUserAuthenticated("agent@example.com")).toBe(true);
 
     clearUserSession();
     expect(getUserSession()).toBeNull();
-    expect(isUserAuthenticated()).toBe(false);
+    expect(isUserAuthenticated("agent@example.com")).toBe(false);
   });
 });
