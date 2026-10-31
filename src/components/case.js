@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import CaseFormFields from "./CaseFormFields";
+import caseFormSchema from "./caseFormSchema";
 
 const API_BASE_URL =
   window.location.hostname === "localhost"
@@ -103,6 +105,16 @@ function Case({ customerId }) {
   const CaseAccordion = ({ caseItem, index }) => {
     const caseId = caseItem.caseId || index;
     const isExpanded = expandedCaseId === caseId;
+    const [formValues, setFormValues] = useState(() =>
+      Object.fromEntries(
+        Object.keys(caseFormSchema.properties).map((field) => [
+          field,
+          caseItem[field] ?? (field === "isEscalated" ? false : ""),
+        ])
+      )
+    );
+    const [saving, setSaving] = useState(false);
+    const [saveError, setSaveError] = useState("");
 
     return (
       <div className="mb-3 overflow-hidden border border-[#8B5E3C] bg-white">
@@ -120,6 +132,57 @@ function Case({ customerId }) {
             {isExpanded ? "▲" : "▼"}
           </span>
         </button>
+        {isExpanded && (
+          <form
+            className="space-y-4 p-4"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              setSaving(true);
+              setSaveError("");
+
+              try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/cases/update`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ ...formValues, caseId }),
+                });
+
+                if (!response.ok) {
+                  throw new Error(`Case update failed: ${response.status}`);
+                }
+
+                const result = await fetchCaseData(customerId);
+                setOpenCases(Array.isArray(result?.data?.open) ? result.data.open : []);
+                setClosedCases(
+                  Array.isArray(result?.data?.closed) ? result.data.closed : []
+                );
+              } catch (_error) {
+                setSaveError("Unable to update case details.");
+              } finally {
+                setSaving(false);
+              }
+            }}
+          >
+            <CaseFormFields
+              schema={caseFormSchema}
+              values={formValues}
+              onChange={(field, value) =>
+                setFormValues((currentValues) => ({
+                  ...currentValues,
+                  [field]: value,
+                }))
+              }
+            />
+            {saveError && <p className="text-sm text-red-500">{saveError}</p>}
+            <button
+              type="submit"
+              disabled={saving}
+              className="rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {saving ? "Saving..." : "Save Case"}
+            </button>
+          </form>
+        )}
       </div>
     );
   };
