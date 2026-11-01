@@ -6,6 +6,10 @@ const caseFormSchema = {
       type: "string",
       title: "Contact Channel",
       enum: ["WhatsApp", "Phone", "Email", "In Store"],
+      ui: {
+        widget: "select",
+        classNames: "form-field",
+      },
     },
 
     customerNeed: {

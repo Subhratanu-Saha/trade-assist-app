@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import caseFormSchema from "../config/caseFormSchema";
+import CaseFormFields from "./CaseFormFields";
 
 const API_BASE_URL =
   window.location.hostname === "localhost"
@@ -43,6 +45,7 @@ function Case({ customerId }) {
   const [expandedCaseId, setExpandedCaseId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isNewCaseFormOpen, setIsNewCaseFormOpen] = useState(false);
 
   useEffect(() => {
     let isCurrentRequest = true;
@@ -151,11 +154,27 @@ function Case({ customerId }) {
 
           <button
             type="button"
+            onClick={() => setIsNewCaseFormOpen((isOpen) => !isOpen)}
             className="rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white"
+            aria-expanded={isNewCaseFormOpen}
           >
-            + New Case
+            {isNewCaseFormOpen ? "Close New Case" : "+ New Case"}
           </button>
         </div>
+
+        {isNewCaseFormOpen && (
+          <div className="mb-6 border border-[#8B5E3C] bg-white p-4">
+            <h3 className="mb-4 text-base font-semibold text-[#0A2947]">
+              New Case
+            </h3>
+            <form
+              aria-label="New case form"
+              onSubmit={(event) => event.preventDefault()}
+            >
+              <CaseFormFields schema={caseFormSchema} />
+            </form>
+          </div>
+        )}
 
         {openCases.length === 0 ? (
           <div className="mb-6 border border-dashed border-gray-300 p-5 text-center text-sm text-gray-500">
