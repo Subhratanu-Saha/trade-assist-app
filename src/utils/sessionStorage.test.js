@@ -5,6 +5,9 @@ import {
   clearUserSession,
 } from "./sessionStorage";
 
+const SESSION_STORAGE_KEY =
+  process.env.REACT_APP_SESSION_STORAGE_KEY || "userSession";
+
 describe("saveUserSession", () => {
   beforeEach(() => {
     sessionStorage.clear();
@@ -22,7 +25,9 @@ describe("saveUserSession", () => {
       })
     );
 
-    expect(JSON.parse(sessionStorage.getItem("userSession"))).toEqual(savedSession);
+    expect(
+      JSON.parse(sessionStorage.getItem(SESSION_STORAGE_KEY))
+    ).toEqual(savedSession);
   });
 
   it("preserves additional session fields without changing the overall structure", () => {
@@ -48,10 +53,10 @@ describe("saveUserSession", () => {
         email: "agent@example.com",
       })
     );
-    expect(isUserAuthenticated()).toBe(true);
+    expect(isUserAuthenticated("agent@example.com")).toBe(true);
 
     clearUserSession();
     expect(getUserSession()).toBeNull();
-    expect(isUserAuthenticated()).toBe(false);
+    expect(isUserAuthenticated("agent@example.com")).toBe(false);
   });
 });

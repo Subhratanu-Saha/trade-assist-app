@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { clearUserSession } from "../utils/sessionStorage";
 
 const AuthContext = createContext(null);
 
@@ -23,11 +24,18 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("authenticatedUserEmail", userEmail);
   };
 
+  const logout = () => {
+    clearUserSession();
+    localStorage.removeItem("authenticatedUserEmail");
+    setEmail(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
         email,
         setAuthenticatedEmail,
+        logout,
         authLoading,
       }}
     >
