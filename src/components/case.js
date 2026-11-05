@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import caseFormSchema from "../config/caseFormSchema";
+import caseFormUiSchema from "../config/caseFormUiSchema";
 import CaseFormFields from "./CaseFormFields";
 
 const API_BASE_URL =
@@ -103,6 +104,25 @@ function Case({ customerId }) {
     );
   };
 
+  const handleNewCaseSubmit = (event) => {
+    event.preventDefault();
+    const submittedValues = Object.fromEntries(
+      new FormData(event.currentTarget).entries()
+    );
+    const formData = Object.fromEntries(
+      Object.entries(caseFormSchema.properties).map(
+        ([fieldName, fieldSchema]) => [
+          fieldName,
+          fieldSchema.type === "boolean"
+            ? submittedValues[fieldName] === "true"
+            : submittedValues[fieldName] || "",
+        ]
+      )
+    );
+
+    console.info("New case form submitted:", formData);
+  };
+
   const CaseAccordion = ({ caseItem, index }) => {
     const caseId = caseItem.caseId || index;
     const isExpanded = expandedCaseId === caseId;
@@ -169,9 +189,18 @@ function Case({ customerId }) {
             </h3>
             <form
               aria-label="New case form"
-              onSubmit={(event) => event.preventDefault()}
+              onSubmit={handleNewCaseSubmit}
             >
-              <CaseFormFields schema={caseFormSchema} />
+              <CaseFormFields
+                schema={caseFormSchema}
+                uiSchema={caseFormUiSchema}
+              />
+              <button
+                type="submit"
+                className="mt-4 rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white"
+              >
+                Submit
+              </button>
             </form>
           </div>
         )}

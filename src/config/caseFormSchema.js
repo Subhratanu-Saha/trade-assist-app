@@ -6,10 +6,8 @@ const caseFormSchema = {
       type: "string",
       title: "Contact Channel",
       enum: ["WhatsApp", "Phone", "Email", "In Store"],
-      ui: {
-        widget: "select",
-        classNames: "form-field",
-      },
+      "ui:widget": "select",
+      "ui:classNames": "form-field",
     },
 
     customerNeed: {
@@ -33,8 +31,8 @@ const caseFormSchema = {
     orderNumber: {
       type: "string",
       title: "Order Number",
-      minLength: 10,
       maxLength: 20,
+      pattern: "^(ORD|PAY)-\\d{3,}$",
     },
 
     notes: {
@@ -42,6 +40,7 @@ const caseFormSchema = {
       title: "Other Remarks",
       minLength: 5,
       maxLength: 200,
+      "ui:widget": "textarea",
     },
 
     escalated: {
