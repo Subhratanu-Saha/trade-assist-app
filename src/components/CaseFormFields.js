@@ -118,6 +118,7 @@ const CaseFormFields = ({ schema, uiSchema = {} }) => {
                     id={controlId}
                     name={fieldName}
                     type={widget === "checkbox" ? "checkbox" : "text"}
+                    value={widget === "checkbox" ? "true" : undefined}
                     required={isRequired}
                     minLength={fieldSchema.minLength}
                     maxLength={fieldSchema.maxLength}
