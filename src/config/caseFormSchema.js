@@ -6,8 +6,6 @@ const caseFormSchema = {
       type: "string",
       title: "Contact Channel",
       enum: ["WhatsApp", "Phone", "Email", "In Store"],
-      "ui:widget": "select",
-      "ui:classNames": "form-field",
     },
 
     customerNeed: {
@@ -40,7 +38,6 @@ const caseFormSchema = {
       title: "Other Remarks",
       minLength: 5,
       maxLength: 200,
-      "ui:widget": "textarea",
     },
 
     escalated: {
