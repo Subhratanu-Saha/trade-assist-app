@@ -1,3 +1,4 @@
+
 import { useRef, useState } from "react";
 import logger from "../utils/logger";
 
@@ -40,6 +41,7 @@ const useCustomerSearch = () => {
 
     try {
       logger.info("Customer search request started");
+
       const response = await fetch(
         `${API_BASE_URL}/api/v1/customers?email=${encodeURIComponent(email)}`
       );
@@ -50,7 +52,10 @@ const useCustomerSearch = () => {
 
       // API returned an error
       if (!response.ok) {
-        logger.error("Customer search request failed", response.status);
+        logger.error("Customer search request failed", {
+          status: response.status,
+        });
+
         setError(
           data?.error ||
             data?.message ||
@@ -61,9 +66,15 @@ const useCustomerSearch = () => {
 
       // Customer found
       if (data?.data && data.data.length > 0) {
-        logger.info("Customer search completed", response.status);
         const foundCustomer = data.data[0];
+
+        logger.info("Customer search completed", {
+          status: response.status,
+          customerId: foundCustomer.customerId,
+        });
+
         setCustomer(foundCustomer);
+
         completedSearches.set(cacheKey, {
           customer: foundCustomer,
           responseCode: response.status,
@@ -72,14 +83,20 @@ const useCustomerSearch = () => {
       }
 
       // API returned 200 with no customer
-      logger.info("Customer search completed with no result", response.status);
+      logger.info("Customer search completed with no result", {
+        status: response.status,
+      });
+
       setResponseCode(404);
+
       completedSearches.set(cacheKey, {
         customer: null,
         responseCode: 404,
       });
     } catch {
-      logger.error("Customer search request failed");
+      logger.error("Customer search request failed", {
+        status: 500,
+      });
 
       setResponseCode(500);
       setError("Unable to connect to Customer Search API.");

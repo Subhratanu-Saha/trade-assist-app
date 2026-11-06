@@ -25,7 +25,10 @@ const fetchCaseData = async (customerId) => {
         throw new Error(`Case API failed: ${response.status}`);
       }
 
-      logger.info("Case list retrieved", response.status);
+      logger.info("Case list retrieved", {
+        status: response.status,
+        customerId,
+      });
       return response.json();
     })
     .finally(() => {
@@ -79,7 +82,7 @@ function Case({ customerId }) {
           setClosedCases(closed);
         }
       } catch (err) {
-        logger.error("Case list retrieval failed");
+        logger.error("Case list retrieval failed", { customerId });
         if (isCurrentRequest) {
           setError("Unable to load case details.");
         }
@@ -97,7 +100,12 @@ function Case({ customerId }) {
     };
   }, [customerId]);
 
-  const toggleCase = (caseId) => {
+   const toggleCase = (caseId) => {
+    logger.info("Case selected", {
+      customerId,
+      caseId,
+    });
+
     setExpandedCaseId((currentId) =>
       currentId === caseId ? null : caseId
     );

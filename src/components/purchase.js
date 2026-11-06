@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import logger from "../utils/logger";
 
@@ -30,7 +31,11 @@ const fetchPurchaseData = (customerId) => {
         throw new Error(`Purchase API failed: ${response.status}`);
       }
 
-      logger.info("Purchase data retrieved", response.status);
+      logger.info("Purchase data retrieved", {
+        status: response.status,
+        customerId,
+      });
+
       return response.json();
     })
     .finally(() => {
@@ -69,6 +74,7 @@ function Purchase({ customerId }) {
         }
 
         const result = await fetchPurchaseData(customerId);
+
         const purchaseData = Array.isArray(result?.data)
           ? result.data
           : Array.isArray(result)
@@ -77,11 +83,17 @@ function Purchase({ customerId }) {
           ? [result.data]
           : [];
 
+        logger.info("Purchase records processed", {
+          customerId,
+          purchaseCount: purchaseData.length,
+        });
+
         if (isCurrentRequest) {
           setPurchases(purchaseData);
         }
       } catch (err) {
-        logger.error("Purchase data retrieval failed");
+        logger.error("Purchase data retrieval failed", { customerId });
+
         if (isCurrentRequest) {
           setError("Unable to load purchase details.");
         }
@@ -172,7 +184,7 @@ function Purchase({ customerId }) {
 
         {!loading && !error && filteredPurchases.length === 0 && (
           <div className="py-6 text-center text-gray-500">
-           You don't have any purchase record created this year
+            You don't have any purchase record created this year
           </div>
         )}
 
@@ -191,6 +203,7 @@ function Purchase({ customerId }) {
                 ))}
               </tr>
             </thead>
+
             <tbody className="divide-y divide-[#D3D4C0]">
               {filteredPurchases.map((purchase, index) => (
                 <tr key={purchase.purchaseid || purchase.purchaseId || index}>
