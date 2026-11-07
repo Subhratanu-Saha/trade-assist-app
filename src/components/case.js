@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import caseFormSchema from "../config/caseFormSchema";
+import caseFormUiSchema from "../config/caseFormUiSchema";
+import CaseFormFields from "./CaseFormFields";
 
 const API_BASE_URL =
   window.location.hostname === "localhost"
@@ -43,6 +46,7 @@ function Case({ customerId }) {
   const [expandedCaseId, setExpandedCaseId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isNewCaseFormOpen, setIsNewCaseFormOpen] = useState(false);
 
   useEffect(() => {
     let isCurrentRequest = true;
@@ -100,6 +104,25 @@ function Case({ customerId }) {
     );
   };
 
+  const handleNewCaseSubmit = (event) => {
+    event.preventDefault();
+    const submittedValues = Object.fromEntries(
+      new FormData(event.currentTarget).entries()
+    );
+    const formData = Object.fromEntries(
+      Object.entries(caseFormSchema.properties).map(
+        ([fieldName, fieldSchema]) => [
+          fieldName,
+          fieldSchema.type === "boolean"
+            ? submittedValues[fieldName] === "true"
+            : submittedValues[fieldName] || "",
+        ]
+      )
+    );
+
+    console.info("New case form submitted:", formData);
+  };
+
   const CaseAccordion = ({ caseItem, index }) => {
     const caseId = caseItem.caseId || index;
     const isExpanded = expandedCaseId === caseId;
@@ -151,11 +174,36 @@ function Case({ customerId }) {
 
           <button
             type="button"
+            onClick={() => setIsNewCaseFormOpen((isOpen) => !isOpen)}
             className="rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white"
+            aria-expanded={isNewCaseFormOpen}
           >
-            + New Case
+            {isNewCaseFormOpen ? "Close New Case" : "+ New Case"}
           </button>
         </div>
+
+        {isNewCaseFormOpen && (
+          <div className="mb-6 border border-[#8B5E3C] bg-white p-4">
+            <h3 className="mb-4 text-base font-semibold text-[#0A2947]">
+              New Case
+            </h3>
+            <form
+              aria-label="New case form"
+              onSubmit={handleNewCaseSubmit}
+            >
+              <CaseFormFields
+                schema={caseFormSchema}
+                uiSchema={caseFormUiSchema}
+              />
+              <button
+                type="submit"
+                className="mt-4 rounded-md bg-[#0A2947] px-3 py-2 text-sm font-semibold text-white"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        )}
 
         {openCases.length === 0 ? (
           <div className="mb-6 border border-dashed border-gray-300 p-5 text-center text-sm text-gray-500">
