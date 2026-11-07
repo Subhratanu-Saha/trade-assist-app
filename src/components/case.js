@@ -53,7 +53,7 @@ function Case({ customerId }) {
         setError("");
 
         if (!customerId) {
-          if (isCurrentRequest) {
+         {
             setOpenCases([]);
             setClosedCases([]);
             setError("Customer ID not found.");
