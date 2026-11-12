@@ -26,17 +26,19 @@ const fetchPurchaseData = (customerId) => {
       customerId
     )}`
   )
-    .then((response) => {
+    .then(async (response) => {
       if (!response.ok) {
         throw new Error(`Purchase API failed: ${response.status}`);
       }
+
+      const data = await response.json();
 
       logger.info("Purchase data retrieved", {
         status: response.status,
         customerId,
       });
 
-      return response.json();
+      return data;
     })
     .finally(() => {
       if (purchaseRequests.get(customerId) === request) {
@@ -92,7 +94,11 @@ function Purchase({ customerId }) {
           setPurchases(purchaseData);
         }
       } catch (err) {
-        logger.error("Purchase data retrieval failed", { customerId });
+        logger.error("Purchase data retrieval failed", {
+          customerId,
+          errorMessage:
+            err instanceof Error ? err.message : String(err),
+        });
 
         if (isCurrentRequest) {
           setError("Unable to load purchase details.");

@@ -93,9 +93,10 @@ const useCustomerSearch = () => {
         customer: null,
         responseCode: 404,
       });
-    } catch {
+    } catch (error) {
       logger.error("Customer search request failed", {
-        status: 500,
+        errorMessage:
+          error instanceof Error ? error.message : String(error),
       });
 
       setResponseCode(500);
