@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from "react";
 
-const API_BASE_URL =
-  window.location.hostname === "localhost"
+import React, { useEffect, useState } from "react";
+import logger from "../utils/logger";
+
+export const getPurchaseApiBaseUrl = (
+  hostname = window.location.hostname
+) => {
+  return hostname === "localhost"
     ? "http://localhost:5000"
     : "https://trade-assist-api.onrender.com";
+};
 
 const getLastFiveYears = () => {
   const currentYear = new Date().getFullYear();
   return Array.from({ length: 5 }, (_, i) => currentYear - i);
 };
 
-const purchaseRequests = new Map();
+export const purchaseRequests = new Map();
 
-const fetchPurchaseData = (customerId) => {
+export const fetchPurchaseData = (customerId) => {
   const existingRequest = purchaseRequests.get(customerId);
 
   if (existingRequest) {
@@ -20,16 +25,23 @@ const fetchPurchaseData = (customerId) => {
   }
 
   const request = fetch(
-    `${API_BASE_URL}/api/v1/purchase?customerId=${encodeURIComponent(
+    `${getPurchaseApiBaseUrl()}/api/v1/purchase?customerId=${encodeURIComponent(
       customerId
     )}`
   )
-    .then((response) => {
+    .then(async (response) => {
       if (!response.ok) {
         throw new Error(`Purchase API failed: ${response.status}`);
       }
 
-      return response.json();
+      const data = await response.json();
+
+      logger.info("Purchase data retrieved", {
+        status: response.status,
+        customerId,
+      });
+
+      return data;
     })
     .finally(() => {
       if (purchaseRequests.get(customerId) === request) {
@@ -58,15 +70,14 @@ function Purchase({ customerId }) {
         setError("");
 
         if (!customerId) {
-          if (isCurrentRequest) {
-            setPurchases([]);
-            setError("Customer ID not found.");
-            setLoading(false);
-          }
+          setPurchases([]);
+          setError("Customer ID not found.");
+          setLoading(false);
           return;
         }
 
         const result = await fetchPurchaseData(customerId);
+
         const purchaseData = Array.isArray(result?.data)
           ? result.data
           : Array.isArray(result)
@@ -75,10 +86,21 @@ function Purchase({ customerId }) {
           ? [result.data]
           : [];
 
+        logger.info("Purchase records processed", {
+          customerId,
+          purchaseCount: purchaseData.length,
+        });
+
         if (isCurrentRequest) {
           setPurchases(purchaseData);
         }
       } catch (err) {
+        logger.error("Purchase data retrieval failed", {
+          customerId,
+          errorMessage:
+            err instanceof Error ? err.message : String(err),
+        });
+
         if (isCurrentRequest) {
           setError("Unable to load purchase details.");
         }
@@ -169,7 +191,7 @@ function Purchase({ customerId }) {
 
         {!loading && !error && filteredPurchases.length === 0 && (
           <div className="py-6 text-center text-gray-500">
-           You don't have any purchase record created this year
+            You don't have any purchase record created this year
           </div>
         )}
 
@@ -188,6 +210,7 @@ function Purchase({ customerId }) {
                 ))}
               </tr>
             </thead>
+
             <tbody className="divide-y divide-[#D3D4C0]">
               {filteredPurchases.map((purchase, index) => (
                 <tr key={purchase.purchaseid || purchase.purchaseId || index}>
