@@ -3,6 +3,7 @@ import LoginForm from "./components/LoginForm";
 import PrivateRoute from "./components/search/PrivateRoute";
 import SearchPage from "./components/pages/SearchPage";
 import CustomerDetailsPage from "./components/pages/CustomerDetailsPage";
+import NotFoundPage from "./components/pages/NotFoundPage";
 import { isUserAuthenticated } from "./utils/sessionStorage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { CustomerProvider } from "./context/CustomerContext";
@@ -10,11 +11,6 @@ import { CustomerProvider } from "./context/CustomerContext";
 
 function AppRoutes() {
   const { email, authLoading } = useAuth();
-
-  if (authLoading) {
-    return null;
-  }
-
   const isAuthenticated = isUserAuthenticated(email);
 
   return (
@@ -22,7 +18,7 @@ function AppRoutes() {
       <Route
         path="/"
         element={
-          isAuthenticated ? (
+          authLoading ? null : isAuthenticated ? (
             <Navigate to="/search" replace />
           ) : (
             <div className="min-h-screen w-full bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300 flex items-center justify-center px-4 py-4">
@@ -52,7 +48,7 @@ function AppRoutes() {
       />
       <Route
         path="*"
-        element={<Navigate to={isAuthenticated ? "/search" : "/"} replace />}
+        element={<NotFoundPage />}
       />
     </Routes>
   );
