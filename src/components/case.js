@@ -1,4 +1,6 @@
+
 import React, { useEffect, useState } from "react";
+import logger from "../utils/logger";
 
 const API_BASE_URL =
   window.location.hostname === "localhost"
@@ -19,12 +21,19 @@ const fetchCaseData = async (customerId) => {
       customerId
     )}`
   )
-    .then((response) => {
+    .then(async (response) => {
       if (!response.ok) {
         throw new Error(`Case API failed: ${response.status}`);
       }
 
-      return response.json();
+      const data = await response.json();
+
+      logger.info("Case list retrieved", {
+        status: response.status,
+        customerId,
+      });
+
+      return data;
     })
     .finally(() => {
       // Remove the request after it finishes.
@@ -75,6 +84,12 @@ function Case({ customerId }) {
           setClosedCases(closed);
         }
       } catch (err) {
+        logger.error("Case list retrieval failed", {
+          customerId,
+          errorMessage:
+            err instanceof Error ? err.message : String(err),
+        });
+
         if (isCurrentRequest) {
           setError("Unable to load case details.");
         }
@@ -93,6 +108,11 @@ function Case({ customerId }) {
   }, [customerId]);
 
   const toggleCase = (caseId) => {
+    logger.info("Case selected", {
+      customerId,
+      caseId,
+    });
+
     setExpandedCaseId((currentId) =>
       currentId === caseId ? null : caseId
     );

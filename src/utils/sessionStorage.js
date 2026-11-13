@@ -1,3 +1,5 @@
+import logger from "./logger";
+
 const SESSION_STORAGE_KEY =
   process.env.REACT_APP_SESSION_STORAGE_KEY || "userSession";
 
@@ -48,7 +50,7 @@ export const getUserSession = () => {
   try {
     return JSON.parse(rawSession);
   } catch (error) {
-    console.error("Failed to parse user session", error);
+    logger.error("Failed to parse user session");
     return null;
   }
 };

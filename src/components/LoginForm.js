@@ -28,9 +28,6 @@ function LoginForm() {
     const result = await login(email, password);
 
     if (result) {
-      console.log("Login Successful");
-      console.log(result);
-
       setAuthenticatedEmail(email);
       navigate("/search", { replace: true });
     }

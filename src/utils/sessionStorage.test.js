@@ -257,7 +257,7 @@ describe("sessionStorage utilities", () => {
     });
   });
 
-  describe("clearUserSession", () => {
+   describe("clearUserSession", () => {
     test("removes saved session", () => {
       saveUserSession({
         email: "agent@example.com",
@@ -266,6 +266,10 @@ describe("sessionStorage utilities", () => {
       clearUserSession();
 
       expect(getUserSession()).toBeNull();
+
+      expect(
+        isUserAuthenticated("agent@example.com")
+      ).toBe(false);
     });
   });
 
@@ -285,19 +289,14 @@ describe("sessionStorage utilities", () => {
             email: "agent@example.com",
           });
 
-          expect(
-            fallbackStorage.setItem
-          ).toHaveBeenCalled();
-
+          expect(fallbackStorage.setItem).toHaveBeenCalled();
           expect(getUserSession()).toBeNull();
 
           clearUserSession();
 
           expect(
             fallbackStorage.removeItem
-          ).toHaveBeenCalledWith(
-            SESSION_STORAGE_KEY
-          );
+          ).toHaveBeenCalledWith(SESSION_STORAGE_KEY);
         }
       );
     });
@@ -317,9 +316,7 @@ describe("sessionStorage utilities", () => {
             email: "agent@example.com",
           });
 
-          expect(
-            fallbackStorage.setItem
-          ).toHaveBeenCalled();
+          expect(fallbackStorage.setItem).toHaveBeenCalled();
         }
       );
     });
@@ -333,10 +330,7 @@ describe("sessionStorage utilities", () => {
             email: "agent@example.com",
           });
 
-          expect(saved.email).toBe(
-            "agent@example.com"
-          );
-
+          expect(saved.email).toBe("agent@example.com");
           expect(getUserSession()).toBeNull();
 
           expect(
@@ -349,5 +343,5 @@ describe("sessionStorage utilities", () => {
         }
       );
     });
-  });
+   });
 });

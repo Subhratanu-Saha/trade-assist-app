@@ -1,4 +1,6 @@
+
 import React, { useEffect, useState } from "react";
+import logger from "../utils/logger";
 
 export const getPurchaseApiBaseUrl = (
   hostname = window.location.hostname
@@ -27,12 +29,19 @@ export const fetchPurchaseData = (customerId) => {
       customerId
     )}`
   )
-    .then((response) => {
+    .then(async (response) => {
       if (!response.ok) {
         throw new Error(`Purchase API failed: ${response.status}`);
       }
 
-      return response.json();
+      const data = await response.json();
+
+      logger.info("Purchase data retrieved", {
+        status: response.status,
+        customerId,
+      });
+
+      return data;
     })
     .finally(() => {
       if (purchaseRequests.get(customerId) === request) {
@@ -77,10 +86,21 @@ function Purchase({ customerId }) {
           ? [result.data]
           : [];
 
+        logger.info("Purchase records processed", {
+          customerId,
+          purchaseCount: purchaseData.length,
+        });
+
         if (isCurrentRequest) {
           setPurchases(purchaseData);
         }
       } catch (err) {
+        logger.error("Purchase data retrieval failed", {
+          customerId,
+          errorMessage:
+            err instanceof Error ? err.message : String(err),
+        });
+
         if (isCurrentRequest) {
           setError("Unable to load purchase details.");
         }
