@@ -29,8 +29,8 @@ const caseFormSchema = {
     orderNumber: {
       type: "string",
       title: "Order Number",
-      minLength: 10,
       maxLength: 20,
+      pattern: "^(ORD|PAY)-\\d{3,}$",
     },
 
     notes: {
